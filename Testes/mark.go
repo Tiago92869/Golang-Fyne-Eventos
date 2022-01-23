@@ -7,10 +7,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func Main() {
+func main() {
 	a := app.New()
 	w := a.NewWindow("teste")
 	w.Resize(fyne.NewSize(400, 400))
+	w.SetFullScreen(true)
 
 	entry := widget.NewEntry()
 	entry.SetPlaceHolder("Enter your name")

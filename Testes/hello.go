@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
-	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -84,16 +84,22 @@ func main() {
 
 	//INSERIR OS ELEMENTOS NA JANELA
 	w.SetContent(
-		container.NewVBox(
-			labelX,
-			btn,
-			checkbox1,
-			checkbox2,
-			hyperlink,
-			textX,
-			img,
-			circle,
-			Iconx,
+		fyne.NewContainerWithLayout(
+			layout.NewVBoxLayout(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), labelX, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), btn, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), checkbox1, checkbox2, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), hyperlink, textX, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), img, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), circle, layout.NewSpacer()),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), Iconx, layout.NewSpacer()),
+			layout.NewSpacer(),
 		),
 	)
 
