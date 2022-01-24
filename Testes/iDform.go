@@ -24,7 +24,7 @@ func main(){
 	nome.Resize(fyne.NewSize(200, 40)) //definir as medidas da box (pre-defnido)
 	nome.Move(fyne.NewPos(40,50)) //Definir a translação da box nas medidas que queremos
 
-	
+	email := widget.NewEntry()
 
 
 
