@@ -16,9 +16,9 @@ import (
 
 //IMPORTING FYNE IN MY PROJECT
 func main() {
-	fmt.Println("Hello World")
+	fmt.Println("O xiko esteve aqui")
 	//start with go mod init myapp to create a package
-	//we will createour frist fyne project
+	//we will create our first fyne project
 
 	a := app.New()                   //our first line of code will creating a new app
 	w := a.NewWindow("Hello")        //we create a new window with a title
