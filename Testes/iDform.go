@@ -13,15 +13,18 @@ func main(){
 
 	a := app.New();
 	w := a.NewWindow("tete")
-	//w.Resize(´fynefyne.MeasureText())
-	w.SetFullScreen(true)
+	w.Resize(´fynefyne.MeasureText())
+	w.SetFullScreen(false)
 
 	fmt.Println("Testando o Go - xiko")
 
-	entry := widget.NewEntry()
-	entry.SetPlaceHolder("Aqui fica o txt do Label(nome)")
-	entry.Resize(fyne.NewSize(200, 40)) //definir as medidas da box (pre-defnido)
-	entry.Move(fyne.NewPos(40,50)) //Definir a translação da box nas medidas que queremos
+	//entry vai ser uma variavel (logica da struct/ em que em vez de termos outras variaveis dentro/ vamos definir as suas propriedades)
+	nome := widget.NewEntry()
+	nome.SetPlaceHolder("Aqui fica o txt do Label(nome)")
+	nome.Resize(fyne.NewSize(200, 40)) //definir as medidas da box (pre-defnido)
+	nome.Move(fyne.NewPos(40,50)) //Definir a translação da box nas medidas que queremos
+
+	
 
 
 
