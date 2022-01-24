@@ -1,5 +1,6 @@
 package main
 
+//CONSTRUTOR DA DATA
 type Data struct {
 	Ano    int
 	Mes    int
@@ -8,34 +9,36 @@ type Data struct {
 	Minuto int
 }
 
+//CONSTRUTOR DOS BILHETES
 type Bilhete struct {
 	ID int
 }
 
+//CONSTRUTOR DOS EVENTOS
 type Evento struct {
-	Nome string
-	Data
+	Nome          string
+	Data          Data
 	Duração       int
 	Participantes int
-	Bilhete
-	Preço float64
+	Bilhete       []Bilhete
+	Preço         float64
 }
 
+//CONSTRUTOR DOS PARTICIPANTES
 type Participante struct {
 	Nome    string
 	Bilhete Bilhete
 }
 
-func registoEvento(nome string, ano int, mes int, dia int, hora int, minutos int, duração int, participantes int, Bilhete, preço float64) *Evento {
+func registoEvento(nome string, ano int, mes int, dia int, hora int, minutos int, duração int, participantes int, preço float64) *Evento {
 	evento := Evento{Nome: nome}
-	evento.Ano = ano
-	evento.Mes = mes
-	evento.Dia = dia
-	evento.Hora = hora
-	evento.Minuto = minutos
+	evento.Data.Ano = ano
+	evento.Data.Mes = mes
+	evento.Data.Dia = dia
+	evento.Data.Hora = hora
+	evento.Data.Minuto = minutos
 	evento.Duração = duração
 	evento.Participantes = participantes
-	evento.Bilhete = Bilhete
 	evento.Preço = preço
-
+	return &evento
 }
