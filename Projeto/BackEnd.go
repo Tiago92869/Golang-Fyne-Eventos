@@ -30,6 +30,8 @@ type Participante struct {
 	Bilhete Bilhete
 }
 
+var lista_eventos []Evento
+
 func registoEvento(nome string, ano int, mes int, dia int, hora int, minutos int, duração int, participantes int, preço float64) *Evento {
 	evento := Evento{Nome: nome}
 	evento.Data.Ano = ano
@@ -41,4 +43,12 @@ func registoEvento(nome string, ano int, mes int, dia int, hora int, minutos int
 	evento.Participantes = participantes
 	evento.Preço = preço
 	return &evento
+}
+
+func getEvento(nome string, lista lista_eventos) *Evento {
+
+}
+
+func main() {
+
 }
