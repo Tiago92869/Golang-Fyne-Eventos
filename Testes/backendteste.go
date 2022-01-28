@@ -27,7 +27,7 @@ type Professor struct {
 }
 
 //LISTA DO ALUNO E COUNT
-var alunoLista []Aluno
+var alunoLista []Aluno = carregarListaAlunos()
 var profLista []Professor
 
 //CRIAR UM NOVO ALUNO
@@ -58,9 +58,9 @@ func getProfList() []Professor {
 	return profLista
 }
 
-//Criar a pasta alunos.txt se esta não existir, mas se existir guarda os dados dos alunos
-func CriarGuardarListaAlunos() {
-	file2, ferr := os.Open("alunos.txt")
+//CRIAR A PASTA DE ALUNOS SE NÃO EXISTIR
+func CriarListaAlunos() {
+	_, ferr := os.Open("alunos.txt")
 	if ferr != nil {
 		file, err := os.Create("alunos.txt")
 		if err != nil {
@@ -68,6 +68,11 @@ func CriarGuardarListaAlunos() {
 		}
 		defer file.Close()
 	}
+}
+
+//Criar a pasta alunos.txt se esta não existir, mas se existir guarda os dados dos alunos
+func GuardarListaAlunos() {
+	file2, _ := os.Create("alunos.txt")
 	size := len(alunoLista)
 	for i := 0; i < size; i++ {
 		var aluno string
@@ -77,31 +82,27 @@ func CriarGuardarListaAlunos() {
 		file2.WriteString(aluno)
 		aluno = strconv.Itoa(alunoLista[i].nota) + "\n"
 		file2.WriteString(aluno)
-
 	}
 }
 
 //carregar a lista de alunos guardada para a lista de aluno
 func carregarListaAlunos() []Aluno {
-	CriarGuardarListaAlunos()
 	var list []Aluno
 	file, err := os.Open("alunos.txt")
 	if err != nil {
 		log.Fatal("We got error", err)
 	}
 	fileScanner := bufio.NewScanner(file)
-	linecounter := 0
 	for fileScanner.Scan() {
-		linecounter++
-	}
-	for v := 0; v < linecounter; v++ {
 		//scanner por linha
 		line := fileScanner.Text()
 		//separar os elementos por virgula
 		items := strings.Split(line, ",")
 		//guarda os valores do txt em variáveis string
 		s, _ := strconv.Atoi(items[0])
+		println(s)
 		ss := items[1]
+		println(ss)
 		sss, _ := strconv.Atoi(items[2])
 		list = append(list, *newAluno(s, ss, sss))
 	}
@@ -170,7 +171,7 @@ func adicionarEstudante() {
 	}
 	newAluno(id, nome, nota)
 	alunoLista = append(alunoLista, *newAluno(id, nome, nota))
-	CriarGuardarListaAlunos()
+	GuardarListaAlunos()
 }
 
 //ADICIONAR O PROFESSOR À LISTA DE PROFESSORES
@@ -203,7 +204,7 @@ func deleteAluno() { //Enter student id to delete
 			alunoLista = alunoLista[:len(a)-1]*/
 		}
 	}
-	CriarGuardarListaAlunos()
+	GuardarListaAlunos()
 }
 
 //EDITAR UM ALUNO PELO ID
@@ -225,7 +226,7 @@ func editAluno() {
 			}
 		}
 	}
-	CriarGuardarListaAlunos()
+	GuardarListaAlunos()
 }
 
 //EDITAR UM ALUNO PELO ID
@@ -295,16 +296,25 @@ func main() {
 	*/
 	//FC CODERS AZUREM
 	//codigo para escrever em txt
-	alunoLista = carregarListaAlunos()
+	CriarListaAlunos()
 	println("aluno", alunoNum)
 	println("profe", profNum)
 	println(alunoNum)
-	adicionarProfessor()
-	fmt.Println(getProfList())
+	//adicionarEstudante()
+	//alunoLista = carregarListaAlunos()
+	fmt.Println(alunoLista[0])
+	fmt.Println(alunoLista[1])
+	fmt.Println(alunoLista[2])
+	fmt.Println(alunoLista[5])
+
+	println(len(alunoLista))
 	adicionarEstudante()
+	println(len(alunoLista))
 	adicionarEstudante()
+	println(len(alunoLista))
 	adicionarEstudante()
-	adicionarEstudante()
+	println(len(alunoLista))
 	fmt.Println(getAlunoList())
+
 	//adicionarAlunoParaProfessor()
 }
