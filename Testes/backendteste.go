@@ -296,7 +296,6 @@ func main() {
 	*/
 	//FC CODERS AZUREM
 	//codigo para escrever em txt
-	CriarListaAlunos()
 	println("aluno", alunoNum)
 	println("profe", profNum)
 	println(alunoNum)

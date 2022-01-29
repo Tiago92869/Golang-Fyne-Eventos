@@ -1,7 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -35,11 +40,69 @@ type Evento struct {
 	DataFim       DataFim
 	Participantes int
 	Bilhete       []Bilhete
+	count         int
 	Preço         float64
 }
 
 //ARRAY OF ALL EVENTOS CREATED
 var lista_eventos []Evento
+
+//CREATE A NEW TICKET
+func registoTicket(id int) *Bilhete {
+	//RETURN A NEW TICKET
+	return &Bilhete{
+		ID: id,
+	}
+}
+
+//CREATE A FILE EVENTOS IF IT DOENS'T EXIST
+func CriarPastaEcentos() {
+	_, ferr := os.Open("eventos.txt")
+	if ferr != nil {
+		file, err := os.Create("eventos.txt")
+		if err != nil {
+			log.Fatal("We got error", err)
+		}
+		defer file.Close()
+	}
+}
+
+//CREATES THE FILE AND SAVES DE DATA TO THE FILE
+func GuardarListaEventos() {
+	CriarPastaEcentos()
+	file2, _ := os.Create("eventos.txt")
+	for i := 0; i < len(lista_eventos); i++ {
+		var evento string
+		evento = (lista_eventos[i].Nome) + ","
+		file2.WriteString(evento)
+		evento = fmt.Sprintf("%.2f\n", lista_eventos[i].Preço)
+		file2.WriteString(evento)
+	}
+}
+
+//LAOD THE EVENTOS FROM FILE TO ARRAY
+func LoadListaEventos() []Evento {
+	var list []Evento
+	file, err := os.Open("eventos.txt")
+	if err != nil {
+		log.Fatal("We got error", err)
+	}
+	fileScanner := bufio.NewScanner(file)
+	for fileScanner.Scan() {
+		//scanner por linha
+		line := fileScanner.Text()
+		//separar os elementos por virgula
+		items := strings.Split(line, ",")
+		//guarda os valores do txt em variáveis string
+		s, _ := strconv.Atoi(items[0])
+		println(s)
+		ss := items[1]
+		println(ss)
+		sss, _ := strconv.Atoi(items[2])
+		list = append(list, *registoEvento())
+	}
+	return list
+}
 
 //CREATE A NEW EVENTO
 func registoEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, anof int, mesf int, diaf int, horaf int, minf int, participantes int, preço float64) *Evento {
@@ -61,6 +124,7 @@ func registoEvento(nome string, anoi int, mesi int, diai int, horai int, mini in
 			MinutoF: minf,
 		},
 		Participantes: participantes,
+		count:         0,
 		Preço:         preço,
 	}
 }
@@ -111,6 +175,7 @@ func adicionarEvento(nome string, anoi int, mesi int, diai int, horai int, mini 
 	registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, preço)
 	//ADD THE EVENTO TO THE ARRAY LIST
 	lista_eventos = append(lista_eventos, *registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, preço))
+	GuardarListaEventos()
 	return 0
 }
 
@@ -165,16 +230,157 @@ func getEvento(nome string) Evento {
 }
 
 //EDIT AN SPECIFIC EVENTO
+func editEvento(nome string, Nnome string, Nparticipantes int) int {
+	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
+	for i := 0; i < len(lista_eventos); i++ {
+		//IF THE EVENTO IS FOUND RETURN IT
+		if lista_eventos[i].Nome == nome {
+			//CHANGE THE NAME
+			lista_eventos[i].Nome = Nnome
+			//CHANGE THE NUMBER OF PEOPLE
+			lista_eventos[i].Participantes = Nparticipantes
+		}
+	}
+	return 0
+}
 
+//BUY A TICKET
+func buyTicket(nome string) {
+	//WE SEARCH THE ENTIRE ARRAY FOR THE EVENTO WE WANT
+	for i := 0; i < len(lista_eventos); i++ {
+		//WE COMPARE THE NAME OF THE EVENTO
+		if lista_eventos[i].Nome == nome {
+			//WE GET THE COUNT OF THE EVENTO
+			//THE COUNT REPRESENTES THE ID OF THE TICKET
+			id := lista_eventos[i].count
+			//ADD ONE MORE TO COUNT
+			lista_eventos[i].count++
+			//CREATE THE TICKET
+			registoTicket(id)
+			//ADD THE TICKET TO THE LIST OF TICKETS OF THE ARRAY
+			lista_eventos[i].Bilhete = append(lista_eventos[i].Bilhete, *registoTicket(id))
+		}
+	}
+}
+
+//COUNT ALL THE TICKETS
+func countAllTickets() int {
+	//CREATE ALL COUNT FOR ALL THE TICKETS
+	count_tickets := 0
+	//WE SEARCH ALL THE ARRAY OF EVENTOS
+	for i := 0; i < len(lista_eventos); i++ {
+		//COUNT THE NUMBER OF TICKETS PER EVENTO
+		count_tickets += len(lista_eventos[i].Bilhete)
+	}
+	//RETURN THE COUNT
+	return count_tickets
+}
+
+/*
+//RETURN DAY WITH THE MOST PEOPLE
+func dayMostPeople() (int, int, int) {
+	daywithmore := 0
+	total := 0
+	time := time.Now()
+	for i := 0; i < len(lista_eventos); i++ {
+		if lista_eventos[i].DataInicio.MesI == int(time.Month()) && lista_eventos[i].DataFim.MesF == int(time.Month()) && lista_eventos[i].DataInicio.AnoI == time.Year() && lista_eventos[i].DataFim.AnoF == time.Year() {
+			for ii := 0; i < 31; i++ {
+
+			}
+		}
+
+	}
+}
+*/
+
+//RETURN EVENTO WITH THE MOST PEOPLE
+func eventoMostPeople() Evento {
+	//VAR FOR THE EVENTO WITH THE MOST PEOPLE
+	var a Evento
+	//VALUE OF THE MOST PEOPLE IN EVENTOS SO FAR
+	counttotal := 0
+	//COUNT OF THE CURRENTE EVENTO
+	countevento := 0
+	//SEARCH IN THE ARRAY OF EVENTOS
+	for i := 0; i < len(lista_eventos); i++ {
+		//SAVE THE VALUE OF NR PEOPLE IN EVENTO
+		countevento = len(lista_eventos[i].Bilhete)
+		//IF HIGEST VALUE IS SMALLER THAN CURRENT VALUE REPLACE THE HIGEST VALUE
+		if countevento > counttotal {
+			counttotal = countevento
+			//SAVE THE EVENTO WITH THE MOST PEOPLE
+			a = lista_eventos[i]
+		}
+	}
+	//RETURN THE EVENTO
+	return a
+}
+
+//COUNT OF HOW MUCH MONEY DID THEY WON
+func countAllMoney() float64 {
+	//VAR TO COUNT THE MONEY
+	var total float64
+	//SEARCH THE ENTIRY ARRAY OF EVENTOS
+	for i := 0; i < len(lista_eventos); i++ {
+		//MULTIPLY THE PRICEWITH THE NUMBER OF TICKETS
+		total += lista_eventos[i].Preço * float64(len(lista_eventos[i].Bilhete))
+	}
+	//RETURN THE TOTAL
+	return total
+}
+
+//COUNT OF HOW MUCH MONEY DID THEY WON IN CURRENT MONTH
+func countCurrentMonthMoney() float64 {
+	//VAR TO COUNT THE MONEY
+	var total float64
+	time := time.Now()
+	//SEARCH THE ENTIRY ARRAY OF EVENTOS
+	for i := 0; i < len(lista_eventos); i++ {
+		//CHECK IF THE DATE IS THE SAME MONTH AS THE CURRENT AND YEAR
+		if lista_eventos[i].DataInicio.MesI == int(time.Month()) && lista_eventos[i].DataFim.MesF == int(time.Month()) && lista_eventos[i].DataInicio.AnoI == time.Year() && lista_eventos[i].DataFim.AnoF == time.Year() {
+			//MULTIPLY THE PRICEWITH THE NUMBER OF TICKETS
+			total += lista_eventos[i].Preço * float64(len(lista_eventos[i].Bilhete))
+		}
+	}
+	//RETURN THE TOTAL
+	return total
+}
+
+//CHANGE THE PRICE OF THE TICKETS, IT CAN ONLY HAPPEN IF THERE ARE NO TICKET SOLD
+func editTicketPrice(nome string, price float64) int {
+	//SEARCH THE ARRAY OF EVENTOS
+	for i := 0; i < len(lista_eventos); i++ {
+		//CHECKS THE NAME OF THE EVENTO
+		if nome == lista_eventos[i].Nome {
+			//CHECKS IF IT SOLD ANY TICKET
+			if lista_eventos[i].count == 0 {
+				//CHANGE THE PRICE
+				lista_eventos[i].Preço = price
+			} else {
+				//RETURN 1 FOR FAILURE
+				return 1
+			}
+		}
+	}
+	//RETURN 0 FOR SUCCESS
+	return 0
+}
+
+//MAIN
 func main() {
-	adicionarEvento("aaa", 1, 3, 4, 8, 6, 3, 23, 3)
-	adicionarEvento("aafa", 1, 3, 4, 20, 6, 2, 23, 3)
-	adicionarEvento("aafaaaa", 5551, 3, 5, 20, 6, 2, 23, 3)
+	adicionarEvento("aaa", 2022, 1, 4, 8, 6, 3, 23, 3)
+	adicionarEvento("aaFa", 2022, 1, 22, 8, 6, 3, 23, 3)
 	fmt.Println(GetEventosList())
+	buyTicket("aaa")
+	buyTicket("aaa")
+	buyTicket("aaa")
+	editTicketPrice("aaa", 543)
+	editTicketPrice("aaFa", 543)
 	println(len(lista_eventos))
-	getEvento("aafa")
-	fmt.Println(getEvento("aafa"))
-	fmt.Println(GetEventosHappened())
-	println(len(lista_eventos[0].Bilhete))
+	fmt.Println(GetEventosList())
+	fmt.Println(countAllTickets())
+	fmt.Println(eventoMostPeople())
+	fmt.Println(countAllMoney())
+	fmt.Println(countCurrentMonthMoney())
 
 }
