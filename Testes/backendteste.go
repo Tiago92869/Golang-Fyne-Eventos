@@ -20,20 +20,15 @@ type Aluno struct {
 
 //PROFESSOR
 type Professor struct {
-	id     int
-	nome   string
-	alunos [2]Aluno
+	id       int
+	nome     string
+	alunos   [2]Aluno
+	position int
 }
 
 //LISTA DO ALUNO E COUNT
-var (
-	alunoLista []Aluno
-	//alunoNum = 0
-	//LISTA DO PROFESSOR E COUNT
-	profLista []Professor
-	//profNum = 0
-	position = 0
-)
+var alunoLista []Aluno = carregarListaAlunos()
+var profLista []Professor
 
 //CRIAR UM NOVO ALUNO
 func newAluno(id int, nome string, nota int) *Aluno {
@@ -47,8 +42,9 @@ func newAluno(id int, nome string, nota int) *Aluno {
 //CRIAR UM NOVO PROFESSOR
 func newProf(id int, nome string) *Professor {
 	return &Professor{
-		id:   id,
-		nome: nome,
+		id:       id,
+		nome:     nome,
+		position: 0,
 	}
 }
 
@@ -62,45 +58,105 @@ func getProfList() []Professor {
 	return profLista
 }
 
-//verificar se existe pasta criada
-func getNum() (int, int) {
-	file2, ferr := os.Open("count.txt")
-
+//CRIAR A PASTA DE ALUNOS SE NÃO EXISTIR
+func CriarListaAlunos() {
+	_, ferr := os.Open("alunos.txt")
 	if ferr != nil {
-		alunoNum := 0
-		profNum := 0
-		str := strconv.Itoa(alunoNum)
-		str2 := strconv.Itoa(profNum)
+		file, err := os.Create("alunos.txt")
+		if err != nil {
+			log.Fatal("We got error", err)
+		}
+		defer file.Close()
+	}
+}
 
+//Criar a pasta alunos.txt se esta não existir, mas se existir guarda os dados dos alunos
+func GuardarListaAlunos() {
+	file2, _ := os.Create("alunos.txt")
+	size := len(alunoLista)
+	for i := 0; i < size; i++ {
+		var aluno string
+		aluno = strconv.Itoa(alunoLista[i].id) + ","
+		file2.WriteString(aluno)
+		aluno = alunoLista[i].nome + ","
+		file2.WriteString(aluno)
+		aluno = strconv.Itoa(alunoLista[i].nota) + "\n"
+		file2.WriteString(aluno)
+	}
+}
+
+//carregar a lista de alunos guardada para a lista de aluno
+func carregarListaAlunos() []Aluno {
+	var list []Aluno
+	file, err := os.Open("alunos.txt")
+	if err != nil {
+		log.Fatal("We got error", err)
+	}
+	fileScanner := bufio.NewScanner(file)
+	for fileScanner.Scan() {
+		//scanner por linha
+		line := fileScanner.Text()
+		//separar os elementos por virgula
+		items := strings.Split(line, ",")
+		//guarda os valores do txt em variáveis string
+		s, _ := strconv.Atoi(items[0])
+		println(s)
+		ss := items[1]
+		println(ss)
+		sss, _ := strconv.Atoi(items[2])
+		list = append(list, *newAluno(s, ss, sss))
+	}
+	return list
+}
+
+//verificar se existe pasta criada
+//se nao existir criamos uma nova pasta onde iremos inserir o numero de alunos e o numero de professores e a posição respectivamente
+//se existir iremos returnar o numero de alunos e o numero de professores
+func getNum() (int, int) {
+	//file2 corresponde à ação de abrir o ficheiro txt
+	file2, ferr := os.Open("count.txt")
+	//criamos os pointers para os valores da pasta
+	var i *int
+	var ii *int
+	//se não existir o ficheiro, criamos um novo
+	if ferr != nil {
+		//convertemos os valores int para string
+		str := strconv.Itoa(0)
+		str2 := strconv.Itoa(0)
+		//criação da nova pasta
 		file, err := os.Create("count.txt")
-
+		//verificar se não ocorreu nenhum erro na criação
 		if err != nil {
 			log.Fatal("We got error", err)
 		}
 
 		defer file.Close()
-
+		//inserimos os ficheiros dentro da pasta
 		fmt.Fprintf(file, str)
 		fmt.Fprint(file, ",")
 		fmt.Fprintf(file, str2)
 	}
 	scanner := bufio.NewScanner(file2)
-
+	//lê-mos os valores guardados no ficheiro
 	for scanner.Scan() {
+		//scanner por linha
 		line := scanner.Text()
+		//separar os elementos por virgula
 		items := strings.Split(line, ",")
+		//guarda os valores do txt em variáveis string
 		s := items[0]
 		ss := items[1]
-		println(ss)
-		println(s)
-		i, _ := strconv.Atoi(s)
-		ii, _ := strconv.Atoi(ss)
-
+		//converte os valores para int
+		si, _ := strconv.Atoi(s)
+		ssi, _ := strconv.Atoi(ss)
+		//guarda os valores no spointers
+		i = &si
+		ii = &ssi
 	}
-	return i, ii
+	return *i, *ii
 }
 
-//ADICIONAR O ESTUDANTE AO
+//ADICIONAR O ESTUDANTE
 func adicionarEstudante() {
 	var id = alunoNum
 	alunoNum += 1 //soma mais 1 ao contador de alunos
@@ -115,6 +171,7 @@ func adicionarEstudante() {
 	}
 	newAluno(id, nome, nota)
 	alunoLista = append(alunoLista, *newAluno(id, nome, nota))
+	GuardarListaAlunos()
 }
 
 //ADICIONAR O PROFESSOR À LISTA DE PROFESSORES
@@ -147,6 +204,7 @@ func deleteAluno() { //Enter student id to delete
 			alunoLista = alunoLista[:len(a)-1]*/
 		}
 	}
+	GuardarListaAlunos()
 }
 
 //EDITAR UM ALUNO PELO ID
@@ -168,6 +226,7 @@ func editAluno() {
 			}
 		}
 	}
+	GuardarListaAlunos()
 }
 
 //EDITAR UM ALUNO PELO ID
@@ -189,6 +248,7 @@ func editProf() {
 	}
 }
 
+//adicionar um aluno á lista de alunos de um respetivo professor
 func adicionarAlunoParaProfessor() {
 	var ii int
 	fmt.Println("Introduza o numero do id do professor: ")
@@ -206,8 +266,8 @@ func adicionarAlunoParaProfessor() {
 			}
 			for _, v := range alunoLista {
 				if v.id == i {
-					profLista[ii].alunos[position] = alunoLista[i]
-					position++
+					profLista[ii].alunos[profLista[ii].position] = alunoLista[i]
+					profLista[ii].position = profLista[ii].position + 1
 				}
 			}
 		}
@@ -239,26 +299,23 @@ func main() {
 	println("aluno", alunoNum)
 	println("profe", profNum)
 	println(alunoNum)
-	adicionarProfessor()
-	fmt.Println(getProfList())
-	adicionarEstudante()
-	fmt.Println(getAlunoList())
-	adicionarAlunoParaProfessor()
-	println(profLista[0].alunos[0].nome)
-	println(profLista[0].alunos[0].nota)
+	//adicionarEstudante()
+	//alunoLista = carregarListaAlunos()
+	fmt.Println(alunoLista[0])
+	fmt.Println(alunoLista[1])
+	fmt.Println(alunoLista[2])
+	fmt.Println(alunoLista[5])
 
-	f, err := os.Create("alunos.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-	for _, v := range alunoLista {
-		var aluno string
-		aluno = v.nome + "\n"
-		f.WriteString(aluno)
-		aluno = strconv.Itoa(v.id) + "\n"
-		f.WriteString(aluno)
-		aluno = strconv.Itoa(v.nota) + "\n"
-		f.WriteString(aluno)
-	}
+	println(len(alunoLista))
+	adicionarEstudante()
+	println(len(alunoLista))
+	adicionarEstudante()
+	println(len(alunoLista))
+	adicionarEstudante()
+	println(len(alunoLista))
+	fmt.Println(getAlunoList())
+	var aa int
+	fmt.Println(aa)
+
+	//adicionarAlunoParaProfessor()
 }
