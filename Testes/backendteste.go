@@ -314,6 +314,8 @@ func main() {
 	adicionarEstudante()
 	println(len(alunoLista))
 	fmt.Println(getAlunoList())
+	var aa int
+	fmt.Println(aa)
 
 	//adicionarAlunoParaProfessor()
 }
