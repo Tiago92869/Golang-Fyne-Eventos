@@ -8,6 +8,7 @@ import (
 	"log"
 	principal "package/templates"
 
+	//"package/back-end"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/lxn/win"
@@ -52,7 +53,6 @@ func main() {
 	width := int(win.GetSystemMetrics(win.SM_CXSCREEN))
 	//height
 	height := int(win.GetSystemMetrics(win.SM_CYSCREEN))
-
 	//init
 	gtk.Init(nil)
 	//init da funcao princip
