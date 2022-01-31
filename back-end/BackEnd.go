@@ -48,7 +48,7 @@ type Evento struct {
 var lista_eventos []Evento = LoadListaEventos()
 
 //CREATE A NEW TICKET
-func registoTicket(id int) *Bilhete {
+func RegistoTicket(id int) *Bilhete {
 	//RETURN A NEW TICKET
 	return &Bilhete{
 		ID: id,
@@ -125,7 +125,7 @@ func GuardarListaEventos() {
 		//WRITE IN THE FILE THE COUNT OF TICKETS
 		file2.WriteString(count)
 		//SAVE THE PRICE PER TICKET
-		preço := fmt.Sprintf("%.2f\n", lista_eventos[i].Preço) + ","
+		preço := fmt.Sprintf("%.2f", lista_eventos[i].Preço) + ","
 		//WRITE IN THE FILE THE PRICE PER TICKET
 		file2.WriteString(preço)
 		//WE GO TO EACH TICKET FROM THE CURRENT EVENTO
@@ -191,14 +191,14 @@ func LoadListaEventos() []Evento {
 		//GET PRICE PER TICKET
 		preço, _ := strconv.ParseFloat(items[13], 64)
 		//INSERT INTO A LIST
-		list = append(list, *registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, partic, count, preço))
+		list = append(list, *RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, partic, count, preço))
 	}
 	//RETURN THE LIST
 	return list
 }
 
 //CREATE A NEW EVENTO
-func registoEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, anof int, mesf int, diaf int, horaf int, minf int, participantes int, count int, preço float64) *Evento {
+func RegistoEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, anof int, mesf int, diaf int, horaf int, minf int, participantes int, count int, preço float64) *Evento {
 	//RETURN A NEW EVENTO
 	return &Evento{
 		Nome: nome,
@@ -265,9 +265,9 @@ func AdicionarEvento(nome string, anoi int, mesi int, diai int, horai int, mini 
 		return 1
 	}
 	//CREATE A NEW EVENTO
-	registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço)
+	RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço)
 	//ADD THE EVENTO TO THE ARRAY LIST
-	lista_eventos = append(lista_eventos, *registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço))
+	lista_eventos = append(lista_eventos, *RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço))
 	GuardarListaEventos()
 	return 0
 }
@@ -298,7 +298,7 @@ func GetEventosHappened() []Evento {
 }
 
 //DELETE AN EVENTO FROM THE ARRAY
-func deleteEvento(nome string) {
+func DeleteEvento(nome string) {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND DELETE IT
@@ -310,7 +310,7 @@ func deleteEvento(nome string) {
 }
 
 //SEARCH AN EVENTO FROM THE ARRAY
-func getEvento(nome string) Evento {
+func GetEvento(nome string) Evento {
 	var a Evento
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(lista_eventos); i++ {
@@ -323,7 +323,7 @@ func getEvento(nome string) Evento {
 }
 
 //EDIT AN SPECIFIC EVENTO
-func editEvento(nome string, Nnome string, Nparticipantes int) int {
+func EditEvento(nome string, Nnome string, Nparticipantes int) int {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND RETURN IT
@@ -338,7 +338,7 @@ func editEvento(nome string, Nnome string, Nparticipantes int) int {
 }
 
 //BUY A TICKET
-func buyTicket(nome string) int {
+func BuyTicket(nome string) int {
 	//WE SEARCH THE ENTIRE ARRAY FOR THE EVENTO WE WANT
 	for i := 0; i < len(lista_eventos); i++ {
 		//WE COMPARE THE NAME OF THE EVENTO
@@ -352,9 +352,9 @@ func buyTicket(nome string) int {
 				//ADD ONE MORE TO COUNT
 				lista_eventos[i].count++
 				//CREATE THE TICKET
-				registoTicket(id)
+				RegistoTicket(id)
 				//ADD THE TICKET TO THE LIST OF TICKETS OF THE ARRAY
-				lista_eventos[i].Bilhete = append(lista_eventos[i].Bilhete, *registoTicket(id))
+				lista_eventos[i].Bilhete = append(lista_eventos[i].Bilhete, *RegistoTicket(id))
 			}
 		}
 	}
@@ -363,7 +363,7 @@ func buyTicket(nome string) int {
 }
 
 //RETURN A TICKET ALREADY BOUGHT
-func returnTicket(nome string, id_ticket int) {
+func ReturnTicket(nome string, id_ticket int) {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND WE SEARCH HIS LIST OF TICKETS
@@ -381,7 +381,7 @@ func returnTicket(nome string, id_ticket int) {
 }
 
 //CHANGE THE PRICE OF AN EVENTO IF NO ONE BOUGHT THE TICKET
-func changeTicketPrice(nome string, preço float64) int {
+func ChangeTicketPrice(nome string, preço float64) int {
 	//SEARCH THE ARRAY OF EVENTOS
 	for i := 0; i < len(lista_eventos); i++ {
 		//CHECK FOR THE EVENTO WITH THE NAME WE WANT
@@ -401,7 +401,7 @@ func changeTicketPrice(nome string, preço float64) int {
 }
 
 //COUNT ALL THE TICKETS
-func countAllTickets() int {
+func CountAllTickets() int {
 	//CREATE ALL COUNT FOR ALL THE TICKETS
 	count_tickets := 0
 	//WE SEARCH ALL THE ARRAY OF EVENTOS
@@ -431,7 +431,7 @@ func dayMostPeople() (int, int, int) {
 */
 
 //RETURN EVENTO WITH THE MOST PEOPLE
-func eventoMostPeople() Evento {
+func EventoMostPeople() Evento {
 	//VAR FOR THE EVENTO WITH THE MOST PEOPLE
 	var a Evento
 	//VALUE OF THE MOST PEOPLE IN EVENTOS SO FAR
@@ -454,7 +454,7 @@ func eventoMostPeople() Evento {
 }
 
 //COUNT OF HOW MUCH MONEY DID THEY WON
-func countAllMoney() float64 {
+func CountAllMoney() float64 {
 	//VAR TO COUNT THE MONEY
 	var total float64
 	//SEARCH THE ENTIRY ARRAY OF EVENTOS
@@ -467,7 +467,7 @@ func countAllMoney() float64 {
 }
 
 //COUNT OF HOW MUCH MONEY DID THEY WON IN CURRENT MONTH
-func countCurrentMonthMoney() float64 {
+func CountCurrentMonthMoney() float64 {
 	//VAR TO COUNT THE MONEY
 	var total float64
 	time := time.Now()
@@ -484,7 +484,7 @@ func countCurrentMonthMoney() float64 {
 }
 
 //CHANGE THE PRICE OF THE TICKETS, IT CAN ONLY HAPPEN IF THERE ARE NO TICKET SOLD
-func editTicketPrice(nome string, price float64) int {
+func EditTicketPrice(nome string, price float64) int {
 	//SEARCH THE ARRAY OF EVENTOS
 	for i := 0; i < len(lista_eventos); i++ {
 		//CHECKS THE NAME OF THE EVENTO
