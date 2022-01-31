@@ -41,7 +41,7 @@ func initcss() {
 	}
 	//IR BUSCAR AS PROPRIEDADES
 	gtk.AddProviderForScreen(screen, Provider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-	
+
 }
 
 /**MAIN**/

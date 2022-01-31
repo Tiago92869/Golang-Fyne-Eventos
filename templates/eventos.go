@@ -1,6 +1,10 @@
 package principal
 
 import (
+	"fmt"
+	"package/back-end"
+	"strconv"
+
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/lxn/win"
 )
@@ -26,10 +30,14 @@ type eventos struct {
 	label_esq_three *gtk.Label
 	//calendar
 	calendar_esq *gtk.Calendar
-	//label esqc four
+	//label esq four
 	label_esq_four *gtk.Label
 	//entry esq three
 	entry_esq_three *gtk.Entry
+	//label esq seven
+	label_esq_seven *gtk.Label
+	//entry esq four
+	entry_esq_four *gtk.Entry
 	//hbox esq one
 	hbox_esq_one *gtk.Box
 	//label esq five
@@ -127,16 +135,16 @@ func InitEvents() {
 	event.label_esq_three, _ = gtk.LabelNew("SELECIONE A DATA")
 	event.label_esq_three.SetName("eventstext")
 	//packing
-	event.vbox_esquerdo.PackStart(event.label_esq_three, true, true, 2)
+	event.vbox_esquerdo.PackStart(event.label_esq_three, true, true, 0)
 	//calendar
 	event.calendar_esq, _ = gtk.CalendarNew()
 	//packing
-	event.vbox_esquerdo.PackStart(event.calendar_esq, true, true, 2)
+	event.vbox_esquerdo.PackStart(event.calendar_esq, true, true, 0)
 	println(event.calendar_esq.GetName())
 	//empty
 	empty_box_four, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
-	event.vbox_esquerdo.PackStart(empty_box_four, true, true, uint(float64(height)*0.02))
+	event.vbox_esquerdo.PackStart(empty_box_four, true, true, uint(float64(height)*0.01))
 	//label four
 	event.label_esq_four, _ = gtk.LabelNew("DURAÇÃO EM HORAS")
 	event.label_esq_four.SetName("eventstext")
@@ -146,27 +154,37 @@ func InitEvents() {
 	event.entry_esq_three, _ = gtk.EntryNew()
 	event.entry_esq_three.SetProperty("xalign", 0.5)
 	//packing
-	event.vbox_esquerdo.PackStart(event.entry_esq_three, true, true, 2)
+	event.vbox_esquerdo.PackStart(event.entry_esq_three, true, true, 0)
+	//label seven
+	event.label_esq_seven, _ = gtk.LabelNew("NUMERO DE PARTICIPANTES")
+	event.label_esq_seven.SetName("eventstext")
+	//packing
+	event.vbox_esquerdo.PackStart(event.label_esq_seven, true, true, 0)
+	//entry
+	event.entry_esq_four, _ = gtk.EntryNew()
+	//packing
+	event.vbox_esquerdo.PackStart(event.entry_esq_four, true, true, 0)
+
 	//empty
 	empty_box_five, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
-	event.vbox_esquerdo.PackStart(empty_box_five, true, true, uint(float64(height)*0.04))
+	event.vbox_esquerdo.PackStart(empty_box_five, true, true, uint(float64(height)*0.01))
 	//hbox one
-	event.hbox_esq_one, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 20)
+	event.hbox_esq_one, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
 	event.vbox_esquerdo.PackStart(event.hbox_esq_one, true, true, 0)
 	//label five
 	event.label_esq_five, _ = gtk.LabelNew("HORAS")
 	event.label_esq_five.SetName("eventstext")
 	//packing
-	event.hbox_esq_one.PackStart(event.label_esq_five, true, true, 20)
+	event.hbox_esq_one.PackStart(event.label_esq_five, true, true, 0)
 	//label six
 	event.label_esq_six, _ = gtk.LabelNew("MINUTES")
 	event.label_esq_six.SetName("eventstext")
 	//packing
 	event.hbox_esq_one.PackStart(event.label_esq_six, true, true, 20)
 	//hbox two
-	event.hbox_esq_two, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 20)
+	event.hbox_esq_two, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
 	event.vbox_esquerdo.PackStart(event.hbox_esq_two, true, true, 0)
 	//spinner
@@ -182,19 +200,13 @@ func InitEvents() {
 	//spin
 	event.spinner_two.SetName("spinner")
 	//packing
-	event.hbox_esq_two.PackStart(event.spinner_two, true, true, 0)
+	event.hbox_esq_two.PackStart(event.spinner_two, true, true, 20)
 	//empty
 	empty_box_six, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
 	event.vbox_esquerdo.PackStart(empty_box_six, true, true, uint(float64(height)*0.03))
 	//button
 	event.button_esq, _ = gtk.ButtonNewWithLabel("CRIAR")
-	event.button_esq.Connect("clicked", func() {
-		ano, mes, dia := event.calendar_esq.GetDate()
-		println(ano)
-		println(mes)
-		println(dia)
-	})
 	event.button_esq.SetName("top-level")
 	//packing
 	event.vbox_esquerdo.PackStart(event.button_esq, true, true, 0)
@@ -248,5 +260,37 @@ func InitEvents() {
 	event.button_dir_two.SetName("buttonevents")
 	//pack
 	event.hbox_dir_baixo.PackStart(event.button_dir_two, true, true, uint(float64(width)*0.043))
+
+	//TRIGGERS
+	//trigger
+	event.button_esq.Connect("clicked", func() {
+		//BUSCAR ANO,MES,DIA
+		ano, mes, dia := event.calendar_esq.GetDate()
+		//buscar dados
+		nome_evento, _ := event.entry_esq_one.GetText()
+		//preço
+		preco_string, _ := event.entry_esq_two.GetText()
+		preco, _ := strconv.ParseFloat(preco_string, 3)
+		//duracao
+		duracao_string, _ := event.entry_esq_three.GetText()
+		duracao, _ := strconv.Atoi(duracao_string)
+		//numero de participantes
+		participantes_string, _ := event.entry_esq_four.GetText()
+		participantes, _ := strconv.Atoi(participantes_string)
+		//horas
+		horas_string, _ := event.spinner_one.GetText()
+		horas, _ := strconv.Atoi(horas_string)
+		//minutes
+		minutes_string, _ := event.spinner_two.GetText()
+		minutes, _ := strconv.Atoi(minutes_string)
+		//INVOCAR FUNCAO
+		back.AdicionarEvento(nome_evento, int(ano), int(mes)+1, int(dia), horas, minutes, duracao, participantes, 0, preco)
+		//ADICIONAR NA LISTA
+		stringas := fmt.Sprintf("nome: %s data: %d/%d/%d horas: %d/%d duracao: %d preco: %f participantes: %d", nome_evento, dia, mes+1, ano, horas, minutes, duracao, preco, participantes)
+		label, _ := gtk.LabelNew(stringas)
+		event.list_dir.Add(label)
+		event.list_dir.ShowAll()
+
+	})
 
 }

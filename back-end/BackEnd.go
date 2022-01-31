@@ -223,7 +223,7 @@ func registoEvento(nome string, anoi int, mesi int, diai int, horai int, mini in
 }
 
 //ADD THE EVENTO CREATED TO THE ARRAY OF EVENTOS AND ALSO CRIATE THE SAME EVENTO USING THE FUNCTION registoEvento
-func adicionarEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, duração int, participantes int, count int, preço float64) int {
+func AdicionarEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, duração int, participantes int, count int, preço float64) int {
 	//FIRST WE CHECK IF THERES IS ALREADY A EVENTO WITH THE SAME NAME AS THE ONE WE WILL CREATE
 	for i := 0; i < len(lista_eventos); i++ {
 		//CHECK IF THE NAME ALREADY EXISTS IN THE ARRAY OF EVENTOS
@@ -501,28 +501,4 @@ func editTicketPrice(nome string, price float64) int {
 	}
 	//RETURN 0 FOR SUCCESS
 	return 0
-}
-
-//MAIN
-func main() {
-	adicionarEvento("aaa", 2022, 1, 4, 8, 6, 3, 1, 0, 3)
-	adicionarEvento("aaFa", 2022, 1, 22, 8, 6, 3, 23, 0, 3)
-	fmt.Println(GetEventosList())
-	editTicketPrice("aaa", 543)
-	editTicketPrice("aaFa", 543)
-	buyTicket("aaa")
-	buyTicket("aaa")
-	buyTicket("aaa")
-	fmt.Println(GetEventosList())
-	println(len(lista_eventos))
-	returnTicket("aaa", 1)
-	buyTicket("aaa")
-	fmt.Println(GetEventosList())
-	fmt.Println(GetEventosList())
-	fmt.Println(countAllTickets())
-	fmt.Println(eventoMostPeople())
-	fmt.Println(countAllMoney())
-	fmt.Println(countCurrentMonthMoney())
-	GuardarListaEventos()
-	fmt.Println(GetEventosList())
 }
