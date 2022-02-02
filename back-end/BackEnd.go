@@ -48,7 +48,7 @@ type Evento struct {
 var Lista_eventos []Evento = LoadListaEventos()
 
 //CREATE A NEW TICKET
-func registoTicket(id int) *Bilhete {
+func RegistoTicket(id int) *Bilhete {
 	//RETURN A NEW TICKET
 	return &Bilhete{
 		ID: id,
@@ -64,6 +64,16 @@ func CriarPastaEcentos() {
 			log.Fatal("We got error", err)
 		}
 		defer file.Close()
+	}
+}
+
+//FUNCTION TO SAVE THE TICKET IN THE EVENTO FROM THE TEXT FILE
+func AdicionarBilhete(nome string, id int, listaE []Evento) {
+	for i := 0; i < len(listaE); i++ {
+		if listaE[i].Nome == nome {
+			RegistoTicket(id)
+			listaE[i].Bilhete = append(listaE[i].Bilhete, *RegistoTicket(id))
+		}
 	}
 }
 
@@ -125,6 +135,7 @@ func GuardarListaEventos() {
 		//WRITE IN THE FILE THE COUNT OF TICKETS
 		file2.WriteString(count)
 		//SAVE THE PRICE PER TICKET
+<<<<<<< HEAD
 		preço := fmt.Sprintf("%.2f\n", Lista_eventos[i].Preço)
 		//WRITE IN THE FILE THE PRICE PER TICKET
 		file2.WriteString(preço)
@@ -142,6 +153,32 @@ func GuardarListaEventos() {
 				bilhete = strconv.Itoa(Lista_eventos[i].Bilhete[ii].ID) + ","
 				//WRTIE IN THE FILE THE ID OF THE TICKET
 				file2.WriteString(bilhete)
+=======
+		preço := fmt.Sprintf("%.2f", lista_eventos[i].Preço)
+		//WRITE IN THE FILE THE PRICE PER TICKET
+		file2.WriteString(preço)
+		if len(lista_eventos[i].Bilhete) == 0 {
+			//CREATES A NEW LINE
+			file2.WriteString("\n")
+		} else {
+			//ELSE ADD COMON TO ADD A NEW TICKET
+			file2.WriteString(",")
+			//WE GO TO EACH TICKET FROM THE CURRENT EVENTO
+			for ii := 0; ii < len(lista_eventos[i].Bilhete); ii++ {
+				var bilhete string
+				//IF ITS THE LAST TICKET WE MAKE A NEW LINE
+				if ii == (len(lista_eventos[i].Bilhete))-1 {
+					//SAVE THE ID OF THE TICKET
+					bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + "\n"
+					//WRITE IN THE FILE THE ID OF THE TICKET
+					file2.WriteString(bilhete)
+				} else {
+					//SAVE THE ID OF THE TICKET
+					bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + ","
+					//WRTIE IN THE FILE THE ID OF THE TICKET
+					file2.WriteString(bilhete)
+				}
+>>>>>>> d0ed4691d68185cddc8a01927877b7a73f740cc2
 			}
 		}
 	}
@@ -191,14 +228,22 @@ func LoadListaEventos() []Evento {
 		//GET PRICE PER TICKET
 		preço, _ := strconv.ParseFloat(items[13], 64)
 		//INSERT INTO A LIST
-		list = append(list, *registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, partic, count, preço))
+		list = append(list, *RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, partic, count, preço))
+		//WE CHECK IF THERE ARE MORE ITENS IN THIS CASE ARE TICKETS
+		if len(items) > 13 {
+			//IF THERE IS TICKETS WE ADD THEM TO THE EVENTO IN "list"
+			for i := 14; i < len(items); i++ {
+				id, _ := strconv.Atoi(items[i])
+				AdicionarBilhete(nome, id, list)
+			}
+		}
 	}
 	//RETURN THE LIST
 	return list
 }
 
 //CREATE A NEW EVENTO
-func registoEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, anof int, mesf int, diaf int, horaf int, minf int, participantes int, count int, preço float64) *Evento {
+func RegistoEvento(nome string, anoi int, mesi int, diai int, horai int, mini int, anof int, mesf int, diaf int, horaf int, minf int, participantes int, count int, preço float64) *Evento {
 	//RETURN A NEW EVENTO
 	return &Evento{
 		Nome: nome,
@@ -265,9 +310,13 @@ func AdicionarEvento(nome string, anoi int, mesi int, diai int, horai int, mini 
 		return 1
 	}
 	//CREATE A NEW EVENTO
-	registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço)
+	RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço)
 	//ADD THE EVENTO TO THE ARRAY LIST
+<<<<<<< HEAD
 	Lista_eventos = append(Lista_eventos, *registoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço))
+=======
+	lista_eventos = append(lista_eventos, *RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, participantes, count, preço))
+>>>>>>> d0ed4691d68185cddc8a01927877b7a73f740cc2
 	GuardarListaEventos()
 	return 0
 }
@@ -298,7 +347,7 @@ func GetEventosHappened() []Evento {
 }
 
 //DELETE AN EVENTO FROM THE ARRAY
-func deleteEvento(nome string) {
+func DeleteEvento(nome string) {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(Lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND DELETE IT
@@ -307,10 +356,11 @@ func deleteEvento(nome string) {
 			Lista_eventos = append(Lista_eventos[:i], Lista_eventos[i+1:]...)
 		}
 	}
+	GuardarListaEventos()
 }
 
 //SEARCH AN EVENTO FROM THE ARRAY
-func getEvento(nome string) Evento {
+func GetEvento(nome string) Evento {
 	var a Evento
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(Lista_eventos); i++ {
@@ -323,7 +373,7 @@ func getEvento(nome string) Evento {
 }
 
 //EDIT AN SPECIFIC EVENTO
-func editEvento(nome string, Nnome string, Nparticipantes int) int {
+func EditEvento(nome string, Nnome string, Nparticipantes int) int {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(Lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND RETURN IT
@@ -334,11 +384,12 @@ func editEvento(nome string, Nnome string, Nparticipantes int) int {
 			Lista_eventos[i].Participantes = Nparticipantes
 		}
 	}
+	GuardarListaEventos()
 	return 0
 }
 
 //BUY A TICKET
-func buyTicket(nome string) int {
+func BuyTicket(nome string) int {
 	//WE SEARCH THE ENTIRE ARRAY FOR THE EVENTO WE WANT
 	for i := 0; i < len(Lista_eventos); i++ {
 		//WE COMPARE THE NAME OF THE EVENTO
@@ -352,18 +403,23 @@ func buyTicket(nome string) int {
 				//ADD ONE MORE TO COUNT
 				Lista_eventos[i].count++
 				//CREATE THE TICKET
-				registoTicket(id)
+				RegistoTicket(id)
 				//ADD THE TICKET TO THE LIST OF TICKETS OF THE ARRAY
+<<<<<<< HEAD
 				Lista_eventos[i].Bilhete = append(Lista_eventos[i].Bilhete, *registoTicket(id))
+=======
+				lista_eventos[i].Bilhete = append(lista_eventos[i].Bilhete, *RegistoTicket(id))
+>>>>>>> d0ed4691d68185cddc8a01927877b7a73f740cc2
 			}
 		}
 	}
+	GuardarListaEventos()
 	//SUCCESS
 	return 0
 }
 
 //RETURN A TICKET ALREADY BOUGHT
-func returnTicket(nome string, id_ticket int) {
+func ReturnTicket(nome string, id_ticket int) {
 	//SEARCH THE ENTIRE ARRAY TO SEARCH FOR THE EVENTO WITH THE SAME NAME
 	for i := 0; i < len(Lista_eventos); i++ {
 		//IF THE EVENTO IS FOUND WE SEARCH HIS LIST OF TICKETS
@@ -378,10 +434,11 @@ func returnTicket(nome string, id_ticket int) {
 			}
 		}
 	}
+	GuardarListaEventos()
 }
 
 //CHANGE THE PRICE OF AN EVENTO IF NO ONE BOUGHT THE TICKET
-func changeTicketPrice(nome string, preço float64) int {
+func ChangeTicketPrice(nome string, preço float64) int {
 	//SEARCH THE ARRAY OF EVENTOS
 	for i := 0; i < len(Lista_eventos); i++ {
 		//CHECK FOR THE EVENTO WITH THE NAME WE WANT
@@ -396,12 +453,13 @@ func changeTicketPrice(nome string, preço float64) int {
 			}
 		}
 	}
+	GuardarListaEventos()
 	//RETURN SUCCESS
 	return 0
 }
 
 //COUNT ALL THE TICKETS
-func countAllTickets() int {
+func CountAllTickets() int {
 	//CREATE ALL COUNT FOR ALL THE TICKETS
 	count_tickets := 0
 	//WE SEARCH ALL THE ARRAY OF EVENTOS
@@ -431,7 +489,7 @@ func dayMostPeople() (int, int, int) {
 */
 
 //RETURN EVENTO WITH THE MOST PEOPLE
-func eventoMostPeople() Evento {
+func EventoMostPeople() Evento {
 	//VAR FOR THE EVENTO WITH THE MOST PEOPLE
 	var a Evento
 	//VALUE OF THE MOST PEOPLE IN EVENTOS SO FAR
@@ -454,7 +512,7 @@ func eventoMostPeople() Evento {
 }
 
 //COUNT OF HOW MUCH MONEY DID THEY WON
-func countAllMoney() float64 {
+func CountAllMoney() float64 {
 	//VAR TO COUNT THE MONEY
 	var total float64
 	//SEARCH THE ENTIRY ARRAY OF EVENTOS
@@ -467,7 +525,7 @@ func countAllMoney() float64 {
 }
 
 //COUNT OF HOW MUCH MONEY DID THEY WON IN CURRENT MONTH
-func countCurrentMonthMoney() float64 {
+func CountCurrentMonthMoney() float64 {
 	//VAR TO COUNT THE MONEY
 	var total float64
 	time := time.Now()
@@ -484,7 +542,7 @@ func countCurrentMonthMoney() float64 {
 }
 
 //CHANGE THE PRICE OF THE TICKETS, IT CAN ONLY HAPPEN IF THERE ARE NO TICKET SOLD
-func editTicketPrice(nome string, price float64) int {
+func EditTicketPrice(nome string, price float64) int {
 	//SEARCH THE ARRAY OF EVENTOS
 	for i := 0; i < len(Lista_eventos); i++ {
 		//CHECKS THE NAME OF THE EVENTO
@@ -499,6 +557,7 @@ func editTicketPrice(nome string, price float64) int {
 			}
 		}
 	}
+	GuardarListaEventos()
 	//RETURN 0 FOR SUCCESS
 	return 0
 }
