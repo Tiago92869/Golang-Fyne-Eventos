@@ -67,6 +67,16 @@ func CriarPastaEcentos() {
 	}
 }
 
+//FUNCTION TO SAVE THE TICKET IN THE EVENTO FROM THE TEXT FILE
+func AdicionarBilhete(nome string, id int, listaE []Evento) {
+	for i := 0; i < len(listaE); i++ {
+		if listaE[i].Nome == nome {
+			RegistoTicket(id)
+			listaE[i].Bilhete = append(listaE[i].Bilhete, *RegistoTicket(id))
+		}
+	}
+}
+
 //CREATES THE FILE AND SAVES DE DATA TO THE FILE
 func GuardarListaEventos() {
 	CriarPastaEcentos()
@@ -125,23 +135,30 @@ func GuardarListaEventos() {
 		//WRITE IN THE FILE THE COUNT OF TICKETS
 		file2.WriteString(count)
 		//SAVE THE PRICE PER TICKET
-		preço := fmt.Sprintf("%.2f", lista_eventos[i].Preço) + ","
+		preço := fmt.Sprintf("%.2f", lista_eventos[i].Preço)
 		//WRITE IN THE FILE THE PRICE PER TICKET
 		file2.WriteString(preço)
-		//WE GO TO EACH TICKET FROM THE CURRENT EVENTO
-		for ii := 0; ii < len(lista_eventos[i].Bilhete); ii++ {
-			var bilhete string
-			//IF ITS THE LAST TICKET WE MAKE A NEW LINE
-			if ii == (len(lista_eventos[i].Bilhete))-1 {
-				//SAVE THE ID OF THE TICKET
-				bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + "\n"
-				//WRITE IN THE FILE THE ID OF THE TICKET
-				file2.WriteString(bilhete)
-			} else {
-				//SAVE THE ID OF THE TICKET
-				bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + ","
-				//WRTIE IN THE FILE THE ID OF THE TICKET
-				file2.WriteString(bilhete)
+		if len(lista_eventos[i].Bilhete) == 0 {
+			//CREATES A NEW LINE
+			file2.WriteString("\n")
+		} else {
+			//ELSE ADD COMON TO ADD A NEW TICKET
+			file2.WriteString(",")
+			//WE GO TO EACH TICKET FROM THE CURRENT EVENTO
+			for ii := 0; ii < len(lista_eventos[i].Bilhete); ii++ {
+				var bilhete string
+				//IF ITS THE LAST TICKET WE MAKE A NEW LINE
+				if ii == (len(lista_eventos[i].Bilhete))-1 {
+					//SAVE THE ID OF THE TICKET
+					bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + "\n"
+					//WRITE IN THE FILE THE ID OF THE TICKET
+					file2.WriteString(bilhete)
+				} else {
+					//SAVE THE ID OF THE TICKET
+					bilhete = strconv.Itoa(lista_eventos[i].Bilhete[ii].ID) + ","
+					//WRTIE IN THE FILE THE ID OF THE TICKET
+					file2.WriteString(bilhete)
+				}
 			}
 		}
 	}
@@ -192,6 +209,14 @@ func LoadListaEventos() []Evento {
 		preço, _ := strconv.ParseFloat(items[13], 64)
 		//INSERT INTO A LIST
 		list = append(list, *RegistoEvento(nome, anoi, mesi, diai, horai, mini, anof, mesf, diaf, horaf, minf, partic, count, preço))
+		//WE CHECK IF THERE ARE MORE ITENS IN THIS CASE ARE TICKETS
+		if len(items) > 13 {
+			//IF THERE IS TICKETS WE ADD THEM TO THE EVENTO IN "list"
+			for i := 14; i < len(items); i++ {
+				id, _ := strconv.Atoi(items[i])
+				AdicionarBilhete(nome, id, list)
+			}
+		}
 	}
 	//RETURN THE LIST
 	return list
@@ -307,6 +332,7 @@ func DeleteEvento(nome string) {
 			lista_eventos = append(lista_eventos[:i], lista_eventos[i+1:]...)
 		}
 	}
+	GuardarListaEventos()
 }
 
 //SEARCH AN EVENTO FROM THE ARRAY
@@ -334,6 +360,7 @@ func EditEvento(nome string, Nnome string, Nparticipantes int) int {
 			lista_eventos[i].Participantes = Nparticipantes
 		}
 	}
+	GuardarListaEventos()
 	return 0
 }
 
@@ -358,6 +385,7 @@ func BuyTicket(nome string) int {
 			}
 		}
 	}
+	GuardarListaEventos()
 	//SUCCESS
 	return 0
 }
@@ -378,6 +406,7 @@ func ReturnTicket(nome string, id_ticket int) {
 			}
 		}
 	}
+	GuardarListaEventos()
 }
 
 //CHANGE THE PRICE OF AN EVENTO IF NO ONE BOUGHT THE TICKET
@@ -396,6 +425,7 @@ func ChangeTicketPrice(nome string, preço float64) int {
 			}
 		}
 	}
+	GuardarListaEventos()
 	//RETURN SUCCESS
 	return 0
 }
@@ -499,6 +529,7 @@ func EditTicketPrice(nome string, price float64) int {
 			}
 		}
 	}
+	GuardarListaEventos()
 	//RETURN 0 FOR SUCCESS
 	return 0
 }
