@@ -209,10 +209,6 @@ func main() {
 	//CABECA DO INICIAR
 	vbox_baixo.Add(principal.Gethead())
 
-	//APENAS PARA APARECER
-	println(width)
-	println(height)
-
 	/**ADICIONAR Á WINDOW O CONTENT**/
 	win.Add(vbox)
 	win.ShowAll()

@@ -92,7 +92,6 @@ func InitTick() {
 	tick.calendar, _ = gtk.CalendarNew()
 	//packing
 	tick.vbox_esq.PackStart(tick.calendar, true, true, 2)
-	println(tick.calendar.GetName())
 	//empty
 	empty_box_four, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
