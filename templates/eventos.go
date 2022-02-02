@@ -140,7 +140,6 @@ func InitEvents() {
 	event.calendar_esq, _ = gtk.CalendarNew()
 	//packing
 	event.vbox_esquerdo.PackStart(event.calendar_esq, true, true, 0)
-	println(event.calendar_esq.GetName())
 	//empty
 	empty_box_four, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
@@ -162,6 +161,7 @@ func InitEvents() {
 	event.vbox_esquerdo.PackStart(event.label_esq_seven, true, true, 0)
 	//entry
 	event.entry_esq_four, _ = gtk.EntryNew()
+	event.entry_esq_four.SetProperty("xalign", 0.5)
 	//packing
 	event.vbox_esquerdo.PackStart(event.entry_esq_four, true, true, 0)
 
@@ -230,6 +230,42 @@ func InitEvents() {
 	//lista
 	event.list_dir, _ = gtk.ListBoxNew()
 	event.list_dir.SetName("tuvias")
+	//ENCHER A NOSSA LISTA
+	for i := 0; i < len(back.Lista_eventos); i++ {
+		//CRIAR A STRING COM O QUE VAMOS INSERIR DENTRO
+		//nome
+		nome := back.Lista_eventos[i].Nome
+		//datas
+		//ano
+		ano := back.Lista_eventos[i].DataInicio.AnoI
+		//mes
+		mes := back.Lista_eventos[i].DataInicio.MesI
+		//dia
+		dia := back.Lista_eventos[i].DataInicio.DiaI
+		//horas
+		horas := back.Lista_eventos[i].DataInicio.HoraI
+		//minutes
+		minutes := back.Lista_eventos[i].DataInicio.MinutoI
+		//preco
+		preco := back.Lista_eventos[i].Preço
+		//participantes
+		participantes := back.Lista_eventos[i].Participantes
+		//duracao
+		dia_F := back.Lista_eventos[i].DataFim.DiaF
+		//mes
+		mes_F := back.Lista_eventos[i].DataFim.MesF
+		//ano
+		ano_F := back.Lista_eventos[i].DataFim.AnoF
+		//horas
+		horas_F := back.Lista_eventos[i].DataFim.HoraF
+		//minutos fim
+		minutes_F := back.Lista_eventos[i].DataFim.MinutoF
+		//COLOCAR DENTRO DA LISTA
+		repositorio := fmt.Sprintf("NOME: %s DATA: %d/%d/%d %d:%d DATA DO FIM: %d/%d/%d %d:%d LOTAÇÃO: %d PREÇO: %.2f", nome, dia, mes, ano, horas, minutes, dia_F, mes_F, ano_F, horas_F, minutes_F, participantes, preco)
+		label, _ := gtk.LabelNew(repositorio)
+		event.list_dir.Add(label)
+		event.list_dir.ShowAll()
+	}
 	//create an row
 	label, _ := gtk.LabelNew("alo")
 	event.list_dir.Add(label)
@@ -270,7 +306,7 @@ func InitEvents() {
 		nome_evento, _ := event.entry_esq_one.GetText()
 		//preço
 		preco_string, _ := event.entry_esq_two.GetText()
-		preco, _ := strconv.ParseFloat(preco_string, 3)
+		preco, _ := strconv.ParseFloat(preco_string, 1)
 		//duracao
 		duracao_string, _ := event.entry_esq_three.GetText()
 		duracao, _ := strconv.Atoi(duracao_string)
@@ -283,13 +319,20 @@ func InitEvents() {
 		//minutes
 		minutes_string, _ := event.spinner_two.GetText()
 		minutes, _ := strconv.Atoi(minutes_string)
-		//INVOCAR FUNCAO
+		//CRIAR EVENTO
 		back.AdicionarEvento(nome_evento, int(ano), int(mes)+1, int(dia), horas, minutes, duracao, participantes, 0, preco)
 		//ADICIONAR NA LISTA
-		stringas := fmt.Sprintf("nome: %s data: %d/%d/%d horas: %d/%d duracao: %d preco: %f participantes: %d", nome_evento, dia, mes+1, ano, horas, minutes, duracao, preco, participantes)
+		stringas := fmt.Sprintf("NOME: %s DATA: %d/%d/%d HORAS: %d:%d DURACAO: %d PREÇO: %.2f PARTICIPANTES: %d", nome_evento, dia, mes+1, ano, horas, minutes, duracao, preco, participantes)
 		label, _ := gtk.LabelNew(stringas)
 		event.list_dir.Add(label)
 		event.list_dir.ShowAll()
+		//clear things
+		event.entry_esq_one.SetText("")
+		event.entry_esq_two.SetText("")
+		event.entry_esq_three.SetText("")
+		event.entry_esq_four.SetText("")
+		event.spinner_one.SetText("0")
+		event.spinner_two.SetText("0")
 
 	})
 
