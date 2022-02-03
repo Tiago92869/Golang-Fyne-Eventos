@@ -59,6 +59,7 @@ func main() {
 	principal.Init()
 	principal.InitEvents()
 	principal.InitTick()
+	principal.InitData()
 	//init do css
 	initcss()
 	/**WINDOW CREATION**/
@@ -101,15 +102,15 @@ func main() {
 		//TORNAR INVISIVEL A CABECA CORRENTE E VISIVEL A INVISIVEL
 		case "Bilhetes":
 			principal.GetHeadTick().Hide()
-			principal.GetData().Show()
+			principal.Getdatas().Show()
 			location = "Data"
 		case "Inicio":
 			principal.Gethead().Hide()
-			principal.GetData().Show()
+			principal.Getdatas().Show()
 			location = "Data"
 		case "Eventos":
 			principal.GetHeadEventos().Hide()
-			principal.GetData().Show()
+			principal.Getdatas().Show()
 			location = "Data"
 		default:
 			break
@@ -134,7 +135,7 @@ func main() {
 			principal.GetHeadTick().Show()
 			location = "Bilhetes"
 		case "Data":
-			principal.Gethead().Hide()
+			principal.Getdatas().Hide()
 			principal.GetHeadTick().Show()
 			location = "Bilhetes"
 		default:
@@ -160,8 +161,8 @@ func main() {
 			principal.Gethead().Show()
 			location = "Inicio"
 		case "Data":
-			principal.Gethead().Hide()
-			principal.GetHeadTick().Show()
+			principal.Getdatas().Hide()
+			principal.Gethead().Show()
 			location = "Inicio"
 		default:
 			break
@@ -186,8 +187,8 @@ func main() {
 			principal.GetHeadEventos().Show()
 			location = "Eventos"
 		case "Data":
-			principal.Gethead().Hide()
-			principal.GetHeadTick().Show()
+			principal.Getdatas().Hide()
+			principal.GetHeadEventos().Show()
 			location = "Eventos"
 		default:
 			break
@@ -235,7 +236,7 @@ func main() {
 	//CABECA DO INICIAR
 	vbox_baixo.Add(principal.Gethead())
 	//CABECA DA DATA
-	vbox_baixo.Add(principal.GetData())
+	vbox_baixo.Add(principal.Getdatas())
 
 	/**ADICIONAR Á WINDOW O CONTENT**/
 	win.Add(vbox)
@@ -245,6 +246,6 @@ func main() {
 	//ESCONDER OS TICKETS
 	principal.GetHeadTick().Hide()
 	//ESCONDE A DATA
-	principal.GetData().Hide()
+	principal.Getdatas().Hide()
 	gtk.Main()
 }

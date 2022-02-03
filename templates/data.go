@@ -5,7 +5,7 @@ import (
 	"github.com/lxn/win"
 )
 
-/**STRUCT DATA**/
+/**STRUCT datastruct**/
 type data struct {
 	/**APENAS UM CORPO**/
 
@@ -38,8 +38,8 @@ type data struct {
 	label_eight *gtk.Label
 }
 
-/**INIT DATA**/
-var date data
+/**INIT datastruct**/
+var datastruct data
 
 /**INIT FUNC**/
 func InitData() {
@@ -52,69 +52,69 @@ func InitData() {
 	height := int(win.GetSystemMetrics(win.SM_CYSCREEN))
 	/**BODY**/
 	//vbox
-	date.vbox, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+	datastruct.vbox, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 	//hbox one
-	date.hbox_one, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.090))
+	datastruct.hbox_one, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.090))
 	//hbox two
-	date.hbox_two, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.100))
+	datastruct.hbox_two, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.100))
 	//hbox three
-	date.hbox_three, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.110))
+	datastruct.hbox_three, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.110))
 	//hbox four
-	date.hbox_four, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.120))
+	datastruct.hbox_four, _ = gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, int(float64(height)*0.120))
 	//pack on vbox
-	date.vbox.PackStart(date.hbox_one, true, true, 0)
-	date.vbox.PackStart(date.hbox_two, true, true, 0)
-	date.vbox.PackStart(date.hbox_three, true, true, 0)
-	date.vbox.PackStart(date.hbox_four, true, true, 0)
+	datastruct.vbox.PackStart(datastruct.hbox_one, true, true, 0)
+	datastruct.vbox.PackStart(datastruct.hbox_two, true, true, 0)
+	datastruct.vbox.PackStart(datastruct.hbox_three, true, true, 0)
+	datastruct.vbox.PackStart(datastruct.hbox_four, true, true, 0)
 
 	/**LAYOUT**/
 	//label esquerda
-	date.label_one, _ = gtk.LabelNew("Dinheiro Ganho no Mês Atual:")
-	date.label_one.SetName("dinheiromensal")
+	datastruct.label_one, _ = gtk.LabelNew("Dinheiro Ganho no Mês Atual:")
+	datastruct.label_one.SetName("dinheiromensal")
 	//packing
-	date.hbox_one.PackStart(date.label_one, true, true, 2)
+	datastruct.hbox_one.PackStart(datastruct.label_one, true, true, 2)
 	//label resposta
-	date.label_two, _ = gtk.LabelNew("GANHO")
-	date.label_two.SetName("quantidademensal")
+	datastruct.label_two, _ = gtk.LabelNew("GANHO")
+	datastruct.label_two.SetName("quantidademensal")
 	//packing
-	date.hbox_two.PackStart(date.label_two, true, true, 2)
+	datastruct.hbox_two.PackStart(datastruct.label_two, true, true, 2)
 
 	//label esquerda
-	date.label_three, _ = gtk.LabelNew("Evento com mais pessoas:")
-	date.label_one.SetName("eventomaior")
+	datastruct.label_three, _ = gtk.LabelNew("Evento com mais pessoas:")
+	datastruct.label_one.SetName("eventomaior")
 	//packing
-	date.hbox_three.PackStart(date.label_three, true, true, 2)
+	datastruct.hbox_three.PackStart(datastruct.label_three, true, true, 2)
 	//label esquerda
-	date.label_four, _ = gtk.LabelNew("TOTAL PESSOAS")
-	date.label_four.SetName("dinheiromensal")
+	datastruct.label_four, _ = gtk.LabelNew("TOTAL PESSOAS")
+	datastruct.label_four.SetName("dinheiromensal")
 	//packing
-	date.hbox_two.PackStart(date.label_four, true, true, 2)
+	datastruct.hbox_two.PackStart(datastruct.label_four, true, true, 2)
 
 	//label esquerda
-	date.label_five, _ = gtk.LabelNew("Total de Dinheiro Ganho:")
-	date.label_five.SetName("dinheirototal")
+	datastruct.label_five, _ = gtk.LabelNew("Total de Dinheiro Ganho:")
+	datastruct.label_five.SetName("dinheirototal")
 	//packing
-	date.hbox_three.PackStart(date.label_five, true, true, 2)
+	datastruct.hbox_three.PackStart(datastruct.label_five, true, true, 2)
 	//label esquerda
-	date.label_six, _ = gtk.LabelNew("DINHEIRO TOTAL")
-	date.label_six.SetName("valortotal")
+	datastruct.label_six, _ = gtk.LabelNew("DINHEIRO TOTAL")
+	datastruct.label_six.SetName("valortotal")
 	//packing
-	date.hbox_four.PackStart(date.label_six, true, true, 2)
+	datastruct.hbox_four.PackStart(datastruct.label_six, true, true, 2)
 
 	//label esquerda
-	date.label_seven, _ = gtk.LabelNew("Nº Total de Bilhetes Vendidos:")
-	date.label_seven.SetName("numerobilhetes")
+	datastruct.label_seven, _ = gtk.LabelNew("Nº Total de Bilhetes Vendidos:")
+	datastruct.label_seven.SetName("numerobilhetes")
 	//packing
-	date.hbox_three.PackStart(date.label_seven, true, true, 2)
+	datastruct.hbox_three.PackStart(datastruct.label_seven, true, true, 2)
 	//label esquerda
-	date.label_eight, _ = gtk.LabelNew("BILHETES VENDIDOS")
-	date.label_eight.SetName("valorbilhetes")
+	datastruct.label_eight, _ = gtk.LabelNew("BILHETES VENDIDOS")
+	datastruct.label_eight.SetName("valorbilhetes")
 	//packing
-	date.hbox_four.PackStart(date.label_eight, true, true, 2)
+	datastruct.hbox_four.PackStart(datastruct.label_eight, true, true, 2)
 
 }
 
 //reutrn da cabeca
-func GetData() *gtk.Box {
-	return date.hbox_one
+func Getdatas() *gtk.Box {
+	return datastruct.vbox
 }
