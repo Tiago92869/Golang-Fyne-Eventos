@@ -71,6 +71,11 @@ type eventos struct {
 /**VAR INIT**/
 var event eventos
 
+//remover slice
+func removeSlice(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}
+
 /**GET HEAD**/
 func GetHeadEventos() *gtk.Box {
 	return event.hbox
@@ -140,7 +145,6 @@ func InitEvents() {
 	event.calendar_esq, _ = gtk.CalendarNew()
 	//packing
 	event.vbox_esquerdo.PackStart(event.calendar_esq, true, true, 0)
-	println(event.calendar_esq.GetName())
 	//empty
 	empty_box_four, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
 	//packing
@@ -162,6 +166,7 @@ func InitEvents() {
 	event.vbox_esquerdo.PackStart(event.label_esq_seven, true, true, 0)
 	//entry
 	event.entry_esq_four, _ = gtk.EntryNew()
+	event.entry_esq_four.SetProperty("xalign", 0.5)
 	//packing
 	event.vbox_esquerdo.PackStart(event.entry_esq_four, true, true, 0)
 
@@ -230,9 +235,68 @@ func InitEvents() {
 	//lista
 	event.list_dir, _ = gtk.ListBoxNew()
 	event.list_dir.SetName("tuvias")
-	//create an row
-	label, _ := gtk.LabelNew("alo")
-	event.list_dir.Add(label)
+	//CRIAR ARRAY PARA SABER POSICAO DOS ITEMS
+	var posi []string
+	//ENCHER A NOSSA LISTA
+	for i := 0; i < len(back.Lista_eventos); i++ {
+		//CRIAR A STRING COM O QUE VAMOS INSERIR DENTRO
+		//nome
+		nome := back.Lista_eventos[i].Nome
+		//datas
+		//ano
+		ano := back.Lista_eventos[i].DataInicio.AnoI
+		//mes
+		mes := back.Lista_eventos[i].DataInicio.MesI
+		//dia
+		dia := back.Lista_eventos[i].DataInicio.DiaI
+		//horas
+		horas := back.Lista_eventos[i].DataInicio.HoraI
+		//minutes
+		minutes := back.Lista_eventos[i].DataInicio.MinutoI
+		//preco
+		preco := back.Lista_eventos[i].Preço
+		//participantes
+		participantes := back.Lista_eventos[i].Participantes
+		//duracao
+		dia_F := back.Lista_eventos[i].DataFim.DiaF
+		//mes
+		mes_F := back.Lista_eventos[i].DataFim.MesF
+		//ano
+		ano_F := back.Lista_eventos[i].DataFim.AnoF
+		//horas
+		horas_F := back.Lista_eventos[i].DataFim.HoraF
+		//minutos fim
+		minutes_F := back.Lista_eventos[i].DataFim.MinutoF
+		/**COLOCAR DENTRO DA LISTA**/
+		hbox_list, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+		//images
+		image_pessoa, _ := gtk.ImageNewFromPixbuf(buildiconscale("pessoa.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+		image_data, _ := gtk.ImageNewFromPixbuf(buildiconscale("hora.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+		image_dinheiro, _ := gtk.ImageNewFromPixbuf(buildiconscale("dinheiro.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+		image_evento, _ := gtk.ImageNewFromPixbuf(buildiconscale("evento_list.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+		//labels
+		label_evento, _ := gtk.LabelNew(nome)
+		pessoas_string := fmt.Sprintf("%d", participantes)
+		label_pessoa, _ := gtk.LabelNew(pessoas_string)
+		//criar string para colocar dentro
+		datas := fmt.Sprintf("%d/%d/%d %d:%d - %d/%d/%d %d:%d", dia, mes, ano, horas, minutes, dia_F, mes_F, ano_F, horas_F, minutes_F)
+		label_data, _ := gtk.LabelNew(datas)
+		preco_string := fmt.Sprintf("%.2f", preco)
+		label_money, _ := gtk.LabelNew(preco_string)
+		//packing
+		hbox_list.PackStart(image_evento, true, true, 10)
+		hbox_list.PackStart(label_evento, true, true, 0)
+		hbox_list.PackStart(image_data, true, true, 10)
+		hbox_list.PackStart(label_data, true, true, 0)
+		hbox_list.PackStart(image_pessoa, true, true, 10)
+		hbox_list.PackStart(label_pessoa, true, true, 0)
+		hbox_list.PackStart(image_dinheiro, true, true, 10)
+		hbox_list.PackStart(label_money, true, true, 0)
+		event.list_dir.Add(hbox_list)
+		//adicionar no vetor para saber a posicao correspondente
+		posi = append(posi, nome)
+		event.list_dir.ShowAll()
+	}
 	//pack the scroll
 	event.scroll_for_list.Add(event.list_dir)
 	//hbox
@@ -244,9 +308,8 @@ func InitEvents() {
 	//ACAO DO BOTAO
 	event.button_dir_one.Connect("clicked", func() {
 
-		label, _ = gtk.LabelNew("lol")
-		event.list_dir.Add(label)
-		event.list_dir.ShowAll()
+		println("WINDOW DO MARTINS")
+
 	})
 	event.button_dir_one.SetName("buttonevents")
 	//pack
@@ -270,7 +333,7 @@ func InitEvents() {
 		nome_evento, _ := event.entry_esq_one.GetText()
 		//preço
 		preco_string, _ := event.entry_esq_two.GetText()
-		preco, _ := strconv.ParseFloat(preco_string, 3)
+		preco, _ := strconv.ParseFloat(preco_string, 1)
 		//duracao
 		duracao_string, _ := event.entry_esq_three.GetText()
 		duracao, _ := strconv.Atoi(duracao_string)
@@ -283,13 +346,40 @@ func InitEvents() {
 		//minutes
 		minutes_string, _ := event.spinner_two.GetText()
 		minutes, _ := strconv.Atoi(minutes_string)
-		//INVOCAR FUNCAO
-		back.AdicionarEvento(nome_evento, int(ano), int(mes)+1, int(dia), horas, minutes, duracao, participantes, 0, preco)
-		//ADICIONAR NA LISTA
-		stringas := fmt.Sprintf("nome: %s data: %d/%d/%d horas: %d/%d duracao: %d preco: %f participantes: %d", nome_evento, dia, mes+1, ano, horas, minutes, duracao, preco, participantes)
-		label, _ := gtk.LabelNew(stringas)
-		event.list_dir.Add(label)
-		event.list_dir.ShowAll()
+
+		if nome_evento != "" && preco_string != "" && participantes_string != "" && horas_string != "0" && minutes_string != "0" {
+			//CRIAR EVENTO
+			back.AdicionarEvento(nome_evento, int(ano), int(mes)+1, int(dia), horas, minutes, duracao, participantes, 0, preco)
+			//ADICIONAR NA LISTA
+			stringas := fmt.Sprintf("NOME: %s DATA: %d/%d/%d HORAS: %d:%d DURACAO: %d PREÇO: %.1f PARTICIPANTES: %d", nome_evento, dia, mes+1, ano, horas, minutes, duracao, preco, participantes)
+			label, _ := gtk.LabelNew(stringas)
+			event.list_dir.Add(label)
+			event.list_dir.ShowAll()
+			//clear things
+			event.entry_esq_one.SetText("")
+			event.entry_esq_two.SetText("")
+			event.entry_esq_three.SetText("")
+			event.entry_esq_four.SetText("")
+			event.spinner_one.SetText("0")
+			event.spinner_two.SetText("0")
+		} else {
+			//CRIAR DIALOG MESSAGE
+			dialog, _ := gtk.DialogNew()
+			//content
+			content, _ := dialog.GetContentArea()
+			//CRIAR VBOX
+			vbox, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
+			//CRIAR LABEL
+			label, _ := gtk.LabelNew("Preencha os campos com valores validos!")
+			label.SetProperty("xalign", 0.57)
+			vbox.SetCenterWidget(label)
+			content.Add(vbox)
+			dialog.SetTitle("WARNING")
+			dialog.SetPosition(gtk.WIN_POS_CENTER)
+			dialog.ShowAll()
+			dialog.SetIconFromFile("evento.png")
+
+		}
 
 	})
 

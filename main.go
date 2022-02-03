@@ -237,10 +237,6 @@ func main() {
 	//CABECA DA DATA
 	vbox_baixo.Add(principal.GetData())
 
-	//APENAS PARA APARECER
-	println(width)
-	println(height)
-
 	/**ADICIONAR Á WINDOW O CONTENT**/
 	win.Add(vbox)
 	win.ShowAll()
