@@ -95,6 +95,26 @@ func main() {
 	hbox_btn.PackStart(empty_init, false, false, 0)
 	//btn data
 	btn_data, _ := gtk.ButtonNewWithLabel("DATA")
+	//connect
+	btn_data.Connect("clicked", func() {
+		switch location {
+		//TORNAR INVISIVEL A CABECA CORRENTE E VISIVEL A INVISIVEL
+		case "Bilhetes":
+			principal.GetHeadTick().Hide()
+			principal.GetData().Show()
+			location = "Data"
+		case "Inicio":
+			principal.Gethead().Hide()
+			principal.GetData().Show()
+			location = "Data"
+		case "Eventos":
+			principal.GetHeadEventos().Hide()
+			principal.GetData().Show()
+			location = "Data"
+		default:
+			break
+		}
+	})
 	//setar a classe
 	btn_data.SetName("top-level")
 	//EMPACOTAR NA HBOX
@@ -114,7 +134,9 @@ func main() {
 			principal.GetHeadTick().Show()
 			location = "Bilhetes"
 		case "Data":
-			println("NOTHING YET")
+			principal.Gethead().Hide()
+			principal.GetHeadTick().Show()
+			location = "Bilhetes"
 		default:
 			break
 		}
@@ -138,7 +160,9 @@ func main() {
 			principal.Gethead().Show()
 			location = "Inicio"
 		case "Data":
-			println("NOTHING YET")
+			principal.Gethead().Hide()
+			principal.GetHeadTick().Show()
+			location = "Inicio"
 		default:
 			break
 		}
@@ -162,7 +186,9 @@ func main() {
 			principal.GetHeadEventos().Show()
 			location = "Eventos"
 		case "Data":
-			println("NOTHING YET")
+			principal.Gethead().Hide()
+			principal.GetHeadTick().Show()
+			location = "Eventos"
 		default:
 			break
 		}
@@ -208,6 +234,8 @@ func main() {
 	vbox_baixo.Add(principal.GetHeadTick())
 	//CABECA DO INICIAR
 	vbox_baixo.Add(principal.Gethead())
+	//CABECA DA DATA
+	vbox_baixo.Add(principal.GetData())
 
 	//APENAS PARA APARECER
 	println(width)
@@ -220,5 +248,7 @@ func main() {
 	principal.GetHeadEventos().Hide()
 	//ESCONDER OS TICKETS
 	principal.GetHeadTick().Hide()
+	//ESCONDE A DATA
+	principal.GetData().Hide()
 	gtk.Main()
 }
