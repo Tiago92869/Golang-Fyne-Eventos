@@ -33,11 +33,12 @@ func main() {
 
 		widget.NewToolbarAction(
 			theme.HelpIcon(), func() {
-				fmt.Print("help button")
+				fmt.Println("help button")
 			},
 		),
 	)
 	c := container.NewHBox(toolbar)
+	c.Move(fyne.NewPos(1, 52))
 	window.SetContent(c)
 	window.ShowAndRun()
 }
