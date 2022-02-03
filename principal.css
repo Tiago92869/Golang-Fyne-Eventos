@@ -1,0 +1,68 @@
+*#windowp{
+background-color: #FFFEFE;    
+}
+
+*#vboxcentral{
+background-color:#F0F0F0;
+}
+button#top-level{
+    border: 3px none black;
+    font-weight: bold;
+    text-decoration-color: black;
+    border-style: groove;
+    color: black;    
+    font-size: 150%;
+}
+#vboxescima{
+    background-color: #C4C4C4;
+    border: 3px none black;
+    border-style: groove;
+}
+
+#janelacimatext{
+    font-weight: bold;
+    font-size: 150%;
+}
+
+/***********
+* calendar *
+************/
+calendar.view{
+    background-color: #F0F0F0;
+    font-weight: bold;
+}
+calendar:selected{
+    color: rgb(223, 122, 122);
+    background-color: rgb(105, 105, 93);
+    padding: 0.4em;
+    border-radius: 3px;
+  }
+
+#spinner#arrow{
+    background-color: #6d6666;
+}
+
+#eventstext{
+    font-weight: bold;
+    text-decoration-color: black;  
+    font-size: 100%;
+}
+button#buttonevents{
+    border: 3px none black;
+    font-weight: bold;
+    text-decoration-color: black;
+    border-style: groove;
+    color: black;    
+    font-size: 120%;
+}
+
+/** JANELA DADOS **/
+#titulo{
+    font-weight: bold;
+    font-size: 200%;
+    text-decoration: underline;
+}
+#resposta{
+    font-weight: bold;
+    font-size: 150%;
+}
