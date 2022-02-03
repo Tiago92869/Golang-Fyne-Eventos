@@ -55,3 +55,14 @@ button#buttonevents{
     color: black;    
     font-size: 120%;
 }
+
+/** JANELA DADOS **/
+#titulo{
+    font-weight: bold;
+    font-size: 200%;
+    text-decoration: underline;
+}
+#resposta{
+    font-weight: bold;
+    font-size: 150%;
+}
