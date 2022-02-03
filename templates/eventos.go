@@ -363,21 +363,29 @@ func InitEvents() {
 			event.spinner_one.SetText("0")
 			event.spinner_two.SetText("0")
 		} else {
+			//bloquear janela
+			event.hbox.SetSensitive(false)
 			//CRIAR DIALOG MESSAGE
 			dialog, _ := gtk.DialogNew()
 			//content
 			content, _ := dialog.GetContentArea()
-			//CRIAR VBOX
-			vbox, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 			//CRIAR LABEL
 			label, _ := gtk.LabelNew("Preencha os campos com valores validos!")
+			//CENTRAR TEXTO
 			label.SetProperty("xalign", 0.57)
-			vbox.SetCenterWidget(label)
-			content.Add(vbox)
+			content.SetCenterWidget(label)
+			//SETAR O TITULO DA JANELA
 			dialog.SetTitle("WARNING")
+			//SETAR POSI DA JANELA
 			dialog.SetPosition(gtk.WIN_POS_CENTER)
+			//MOSTRAR JANELA
 			dialog.ShowAll()
+			//SETAR UM ICON PARA A JANELA
 			dialog.SetIconFromFile("evento.png")
+			//IR BUSCAR UMA ACAO QUASO A JANELA SEJA DESTRUIDA
+			dialog.Connect("destroy", func() {
+				event.hbox.SetSensitive(true)
+			})
 
 		}
 
