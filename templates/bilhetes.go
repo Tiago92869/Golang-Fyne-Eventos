@@ -6,6 +6,8 @@ import (
 
 	"fmt"
 	"package/back-end"
+	"strconv"
+	"time"
 
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/lxn/win"
@@ -55,9 +57,13 @@ type ticket struct {
 /**TICKET INIT**/
 var tick ticket
 
+//SWITCH//
+var switch_update int
+
 /**INIT DO TICK**/
 func InitTick() {
-
+	//COMECA A 0
+	switch_update = 0
 	/**SCREEN SIZES**/
 	//width
 	width := int(win.GetSystemMetrics(win.SM_CXSCREEN))
@@ -140,8 +146,8 @@ func InitTick() {
 	tick.vbox_esq.PackStart(tick.label_esq_six, true, true, uint(float64(height)*0.02))
 
 	//spinner
-	tick.spinner_button, _ = gtk.SpinButtonNewWithRange(0, 100, 1)
-	tick.spinner_button.SetProperty("xalign", 0.57)
+	tick.spinner_button, _ = gtk.SpinButtonNewWithRange(1, 100, 1)
+	tick.spinner_button.SetProperty("xalign", 0.55)
 	//packing
 	tick.vbox_esq.PackStart(tick.spinner_button, true, true, uint(float64(height)*0.007))
 	//packing
@@ -237,8 +243,6 @@ func InitTick() {
 		hbox_list.PackStart(image_dinheiro, true, true, 10)
 		hbox_list.PackStart(label_money, true, true, 0)
 		tick.list_dir.Add(hbox_list)
-		//adicionar no vetor para saber a posicao correspondente
-		posi = append(posi, nome)
 		tick.list_dir.ShowAll()
 	}
 	//pack the scroll
@@ -268,6 +272,59 @@ func InitTick() {
 	}()**/
 
 }
+
+/**EXPORTAR ITEMS**/
+//head
 func GetHeadTick() *gtk.Box {
 	return tick.hbox
+}
+
+//FUNCAO PARA ATIVAR O TIMING
+func Updatedata() {
+
+	go func() {
+		//MUDAR O SWITCH PARA LIGADO
+		switch_update = 1
+		//FUNCAO COM LOOP
+		for range time.Tick(time.Second) {
+			//IR BUSCAR A INDEX
+			index := tick.list_dir.GetSelectedRow().GetIndex()
+			//index
+			if index != -1 {
+				//IR BUSCAR QUANTIDADE
+				quantidade_string, _ := tick.spinner_button.GetText()
+				quantidade, _ := strconv.Atoi(quantidade_string)
+				//IR BUSCAR EVENTO
+				nome_evento := back.Lista_eventos[index].Nome
+				//SETAR TEXTO
+				tick.label_esq_three.SetText(nome_evento)
+				var preco float64
+				if quantidade != 0 {
+					//IR BUSCAR PRECO
+					preco = back.Lista_eventos[index].Preço * float64(quantidade)
+				} else {
+					//IR BUSCAR O PRECO
+					preco = back.Lista_eventos[index].Preço
+				}
+				//STRING
+				preco_string := fmt.Sprintf("%.01f", preco)
+				tick.label_esq_five.SetText(preco_string)
+
+			} else {
+				//CASO NAO SEJA SELECIONADO NADA
+				tick.label_esq_three.SetText("Selecione um evento")
+				tick.label_esq_five.SetText("Selecione um evento")
+			}
+			//CONDICAO PARA SAIR
+			if switch_update == 0 {
+				break
+			}
+		}
+	}()
+
+}
+
+//FAZER COM QUE O LOOP PARE
+func Stop() {
+	switch_update = 0
 }

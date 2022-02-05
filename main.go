@@ -103,6 +103,8 @@ func main() {
 		case "Bilhetes":
 			principal.GetHeadTick().Hide()
 			principal.Getdatas().Show()
+			//PARAR A THREAD
+			principal.Stop()
 			location = "Data"
 		case "Inicio":
 			principal.Gethead().Hide()
@@ -129,14 +131,17 @@ func main() {
 		case "Inicio":
 			principal.Gethead().Hide()
 			principal.GetHeadTick().Show()
+			principal.Updatedata()
 			location = "Bilhetes"
 		case "Eventos":
 			principal.GetHeadEventos().Hide()
 			principal.GetHeadTick().Show()
+			principal.Updatedata()
 			location = "Bilhetes"
 		case "Data":
 			principal.Getdatas().Hide()
 			principal.GetHeadTick().Show()
+			principal.Updatedata()
 			location = "Bilhetes"
 		default:
 			break
@@ -155,6 +160,7 @@ func main() {
 		case "Bilhetes":
 			principal.GetHeadTick().Hide()
 			principal.Gethead().Show()
+			principal.Stop()
 			location = "Inicio"
 		case "Eventos":
 			principal.GetHeadEventos().Hide()
@@ -181,6 +187,7 @@ func main() {
 		case "Bilhetes":
 			principal.GetHeadTick().Hide()
 			principal.GetHeadEventos().Show()
+			principal.Stop()
 			location = "Eventos"
 		case "Inicio":
 			principal.Gethead().Hide()

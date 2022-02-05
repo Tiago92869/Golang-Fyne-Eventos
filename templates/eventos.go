@@ -523,9 +523,9 @@ func InitEvents() {
 			//set property
 			entry_preco.SetProperty("xalign", 0.5)
 			//CRIAR BUTTON
-			button, _ := gtk.ButtonNewWithLabel("EDITAR")
+			button_edit, _ := gtk.ButtonNewWithLabel("EDITAR")
 			//set the name
-			button.SetName("buttonevents")
+			button_edit.SetName("buttonevents")
 			//packing
 			vbox.PackStart(label_nome, true, true, 0)
 			vbox.PackStart(entry_nome, true, true, 0)
@@ -533,14 +533,13 @@ func InitEvents() {
 			vbox.PackStart(entry_pessoas, true, true, 0)
 			vbox.PackStart(label_preco, true, true, 0)
 			vbox.PackStart(entry_preco, true, true, 0)
-			vbox.PackStart(button, true, true, 0)
+			vbox.PackStart(button_edit, true, true, 0)
 			content.SetCenterWidget(vbox)
 			dialog.ShowAll()
 
 			//TRIGGERS
 			//button editar
-			button.Connect("clicked", func() {
-				dialog.Close()
+			button_edit.Connect("clicked", func() {
 				//tornar sensivel
 				event.hbox.SetSensitive(true)
 				//get name
@@ -550,15 +549,20 @@ func InitEvents() {
 				participantes, _ := strconv.Atoi(participantes_str)
 				//get preco
 				preco_str, _ := entry_preco.GetText()
-				preco, _ := strconv.ParseFloat(preco_str, 0)
+				preco, _ := strconv.ParseFloat(preco_str, 1)
 				if nome != "" && participantes != 0 && preco != 0.0 {
+					dialog.Close()
 					//MUDAR O PRECO
 					back.EditTicketPrice(posi[index], preco)
 					//EDITAR O EVENTO
 					back.EditEvento(posi[index], nome, participantes)
-
+					//LIMPAR LISTA EVENTS
 					for i := 0; i < len(posi); i++ {
-						event.list_dir.Remove(event.list_dir.GetRowAtIndex(i))
+						event.list_dir.Remove(event.list_dir.GetRowAtIndex(0))
+					}
+					//LIMPAR LISTA PARA O TICK
+					for i := 0; i < len(posi); i++ {
+						tick.list_dir.Remove(tick.list_dir.GetRowAtIndex(0))
 					}
 					//ESVAZIAR POSI
 					posi = nil
@@ -618,10 +622,73 @@ func InitEvents() {
 						hbox_list.PackStart(label_pessoa, true, true, 0)
 						hbox_list.PackStart(image_dinheiro, true, true, 10)
 						hbox_list.PackStart(label_money, true, true, 0)
+						//ADICIONAR TUDO DNV NA LISTA PARA O EVENTS
 						event.list_dir.Add(hbox_list)
 						//adicionar no vetor para saber a posicao correspondente
 						posi = append(posi, nome)
 						event.list_dir.ShowAll()
+					}
+
+					//ENCHER A NOSSA LISTA
+					for i := 0; i < len(back.Lista_eventos); i++ {
+						//CRIAR A STRING COM O QUE VAMOS INSERIR DENTRO
+						//nome
+						nome := back.Lista_eventos[i].Nome
+						//datas
+						//ano
+						ano := back.Lista_eventos[i].DataInicio.AnoI
+						//mes
+						mes := back.Lista_eventos[i].DataInicio.MesI
+						//dia
+						dia := back.Lista_eventos[i].DataInicio.DiaI
+						//horas
+						horas := back.Lista_eventos[i].DataInicio.HoraI
+						//minutes
+						minutes := back.Lista_eventos[i].DataInicio.MinutoI
+						//preco
+						preco := back.Lista_eventos[i].Preço
+						//participantes
+						participantes := back.Lista_eventos[i].Participantes
+						//duracao
+						dia_F := back.Lista_eventos[i].DataFim.DiaF
+						//mes
+						mes_F := back.Lista_eventos[i].DataFim.MesF
+						//ano
+						ano_F := back.Lista_eventos[i].DataFim.AnoF
+						//horas
+						horas_F := back.Lista_eventos[i].DataFim.HoraF
+						//minutos fim
+						minutes_F := back.Lista_eventos[i].DataFim.MinutoF
+						/**COLOCAR DENTRO DA LISTA**/
+						hbox_list, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
+						//images
+						image_pessoa, _ := gtk.ImageNewFromPixbuf(buildiconscale("pessoa.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+						image_data, _ := gtk.ImageNewFromPixbuf(buildiconscale("hora.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+						image_dinheiro, _ := gtk.ImageNewFromPixbuf(buildiconscale("dinheiro.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+						image_evento, _ := gtk.ImageNewFromPixbuf(buildiconscale("evento_list.png", int(float64(height)*0.04), int(float64(height)*0.04), true))
+						//labels
+						label_evento, _ := gtk.LabelNew(nome)
+						pessoas_string := fmt.Sprintf("%d", participantes)
+						label_pessoa, _ := gtk.LabelNew(pessoas_string)
+						//criar string para colocar dentro
+						datas := fmt.Sprintf("%02d/%02d/%02d %02d:%02d - %02d/%02d/%02d %02d:%02d", dia, mes, ano, horas, minutes, dia_F, mes_F, ano_F, horas_F, minutes_F)
+						label_data, _ := gtk.LabelNew(datas)
+						preco_string := fmt.Sprintf("%.2f", preco)
+						label_money, _ := gtk.LabelNew(preco_string)
+						//packing
+						hbox_list.PackStart(image_evento, true, true, 10)
+						hbox_list.PackStart(label_evento, true, true, 0)
+						hbox_list.PackStart(image_data, true, true, 10)
+						hbox_list.PackStart(label_data, true, true, 0)
+						hbox_list.PackStart(image_pessoa, true, true, 10)
+						hbox_list.PackStart(label_pessoa, true, true, 0)
+						hbox_list.PackStart(image_dinheiro, true, true, 10)
+						hbox_list.PackStart(label_money, true, true, 0)
+						//ADICIONAR TUDO DNV NA LISTA PARA O EVENTS
+						tick.list_dir.Add(hbox_list)
+						//adicionar no vetor para saber a posicao correspondente
+						posi = append(posi, nome)
+						tick.list_dir.ShowAll()
 					}
 
 				}
