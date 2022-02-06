@@ -37,6 +37,9 @@ calendar:selected{
     padding: 0.4em;
     border-radius: 3px;
   }
+header{
+    color:blue
+}
 
 #spinner#arrow{
     background-color: #6d6666;
