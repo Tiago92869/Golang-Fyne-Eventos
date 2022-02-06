@@ -159,7 +159,16 @@ func InitTick() {
 	//button
 	tick.button_esq, _ = gtk.ButtonNewWithLabel("CRIAR")
 	tick.button_esq.Connect("clicked", func() {
-
+		index := tick.list_dir.GetSelectedRow().GetIndex()
+		name_e := posi[index]
+		var ev back.Evento
+		ev = back.GetEvento(name_e)
+		numb_tickets_string, _ := tick.spinner_button.GetText()
+		numb_tickets, _ := strconv.Atoi(numb_tickets_string)
+		for i := 0; i < numb_tickets; i++ {
+			back.BuyTicket(ev.Nome)
+		}
+		tick.spinner_button.SetText("0")
 	})
 	tick.button_esq.SetName("top-level")
 	//packing
@@ -254,7 +263,36 @@ func InitTick() {
 	tick.button_dir_one.SetName("buttontick")
 	//ACAO DO BOTAO
 	tick.button_dir_one.Connect("clicked", func() {
+		index := tick.list_dir.GetSelectedRow().GetIndex()
 		tick.list_dir.ShowAll()
+		//bloquear janela
+		event.hbox.SetSensitive(false)
+		//CRIAR DIALOG MESSAGE
+		dialog, _ := gtk.DialogNew()
+		//content
+		content, _ := dialog.GetContentArea()
+		//CRIAR LABEL
+		name_e := posi[index]
+		var a back.Evento
+		a = back.GetEvento(name_e)
+		number_e := len(a.Bilhete)
+		number := strconv.Itoa(number_e)
+		label, _ := gtk.LabelNew("O numero de bilhetes vendidos é: " + number)
+		//CENTRAR TEXTO
+		label.SetProperty("xalign", 0.57)
+		content.SetCenterWidget(label)
+		//SETAR O TITULO DA JANELA
+		dialog.SetTitle("WARNING")
+		//SETAR POSI DA JANELA
+		dialog.SetPosition(gtk.WIN_POS_CENTER)
+		//MOSTRAR JANELA
+		dialog.ShowAll()
+		//SETAR UM ICON PARA A JANELA
+		dialog.SetIconFromFile("evento.png")
+		//IR BUSCAR UMA ACAO QUASO A JANELA SEJA DESTRUIDA
+		dialog.Connect("destroy", func() {
+			event.hbox.SetSensitive(true)
+		})
 	})
 
 	//pack
