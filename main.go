@@ -223,14 +223,13 @@ func main() {
 
 	/**SEGUNDA PARTE DO CORPO**/
 	hbox_baixo, _ := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 0)
-	hbox_baixo.SetSizeRequest(0*width, int(float64(height)*0.989))
 	//EMPACOTAR
 	vbox.PackStart(hbox_baixo, true, false, 1)
 
 	//CRIAR VBOX ONDE VAI ESTAR O CONTEUDO
 	vbox_baixo, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 	//settar tamanho
-	vbox_baixo.SetSizeRequest(int(float64(width)*1.20), 0)
+	vbox_baixo.SetSizeRequest(int(float64(width)*1), 0)
 	//settar nome de teste
 	vbox_baixo.SetName("vboxcentral")
 	//COLOCAR NO MEIO
