@@ -157,18 +157,107 @@ func InitTick() {
 	//packing
 	tick.vbox_esq.PackStart(empty_box_five, true, true, uint(float64(height)*0.04))
 	//button
-	tick.button_esq, _ = gtk.ButtonNewWithLabel("CRIAR")
+	tick.button_esq, _ = gtk.ButtonNewWithLabel("COMPRAR")
 	tick.button_esq.Connect("clicked", func() {
 		index := tick.list_dir.GetSelectedRow().GetIndex()
-		name_e := posi[index]
-		var ev back.Evento
-		ev = back.GetEvento(name_e)
-		numb_tickets_string, _ := tick.spinner_button.GetText()
-		numb_tickets, _ := strconv.Atoi(numb_tickets_string)
-		for i := 0; i < numb_tickets; i++ {
-			back.BuyTicket(ev.Nome)
+		if index != -1 {
+			//name
+			name_e := posi[index]
+			var ev back.Evento
+			//get evento
+			ev = back.GetEvento(name_e)
+			//get the number of tickets
+			numb_tickets_string, _ := tick.spinner_button.GetText()
+			//converte to int
+			numb_tickets, _ := strconv.Atoi(numb_tickets_string)
+
+			//verify if the number oif tickets is less thant the number of participantes
+			size_tickets := len(ev.Bilhete)
+			size_evento := ev.Participantes
+			total_size := size_tickets + numb_tickets
+			if total_size > size_evento {
+				tick.spinner_button.SetText("1")
+				tick.list_dir.ShowAll()
+				//bloquear janela
+				event.hbox.SetSensitive(false)
+				//CRIAR DIALOG MESSAGE
+				dialog, _ := gtk.DialogNew()
+				//content
+				content, _ := dialog.GetContentArea()
+				//CRIAR LABEL
+				label, _ := gtk.LabelNew("O número de bilhetes a comprar ultrapassa o número de participantes")
+				//CENTRAR TEXTO
+				label.SetProperty("xalign", 0.57)
+				content.SetCenterWidget(label)
+				//SETAR O TITULO DA JANELA
+				dialog.SetTitle("Warning")
+				//SETAR POSI DA JANELA
+				dialog.SetPosition(gtk.WIN_POS_CENTER)
+				//MOSTRAR JANELA
+				dialog.ShowAll()
+				//SETAR UM ICON PARA A JANELA
+				dialog.SetIconFromFile("evento.png")
+				//IR BUSCAR UMA ACAO QUASO A JANELA SEJA DESTRUIDA
+				dialog.Connect("destroy", func() {
+					event.hbox.SetSensitive(true)
+				})
+			} else {
+				for i := 0; i < numb_tickets; i++ {
+					back.BuyTicket(ev.Nome)
+				}
+				tick.spinner_button.SetText("1")
+				tick.list_dir.ShowAll()
+				//bloquear janela
+				event.hbox.SetSensitive(false)
+				//CRIAR DIALOG MESSAGE
+				dialog, _ := gtk.DialogNew()
+				//content
+				content, _ := dialog.GetContentArea()
+				//CRIAR LABEL
+				label, _ := gtk.LabelNew("Bilhetes Comprados Com Sucesso")
+				//CENTRAR TEXTO
+				label.SetProperty("xalign", 0.57)
+				content.SetCenterWidget(label)
+				//SETAR O TITULO DA JANELA
+				dialog.SetTitle("Success")
+				//SETAR POSI DA JANELA
+				dialog.SetPosition(gtk.WIN_POS_CENTER)
+				//MOSTRAR JANELA
+				dialog.ShowAll()
+				//SETAR UM ICON PARA A JANELA
+				dialog.SetIconFromFile("evento.png")
+				//IR BUSCAR UMA ACAO QUASO A JANELA SEJA DESTRUIDA
+				dialog.Connect("destroy", func() {
+					event.hbox.SetSensitive(true)
+				})
+			}
+		} else {
+			tick.spinner_button.SetText("1")
+			tick.list_dir.ShowAll()
+			//bloquear janela
+			event.hbox.SetSensitive(false)
+			//CRIAR DIALOG MESSAGE
+			dialog, _ := gtk.DialogNew()
+			//content
+			content, _ := dialog.GetContentArea()
+			//CRIAR LABEL
+			label, _ := gtk.LabelNew("É necessário selecionar um evento")
+			//CENTRAR TEXTO
+			label.SetProperty("xalign", 0.57)
+			content.SetCenterWidget(label)
+			//SETAR O TITULO DA JANELA
+			dialog.SetTitle("Warning")
+			//SETAR POSI DA JANELA
+			dialog.SetPosition(gtk.WIN_POS_CENTER)
+			//MOSTRAR JANELA
+			dialog.ShowAll()
+			//SETAR UM ICON PARA A JANELA
+			dialog.SetIconFromFile("evento.png")
+			//IR BUSCAR UMA ACAO QUASO A JANELA SEJA DESTRUIDA
+			dialog.Connect("destroy", func() {
+				event.hbox.SetSensitive(true)
+			})
 		}
-		tick.spinner_button.SetText("0")
 	})
 	tick.button_esq.SetName("top-level")
 	//packing
