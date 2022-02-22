@@ -4,11 +4,12 @@ Goland and Fyne Event Program
 This project consist in an management software for an stadium, to manage the events that it hosts.
 
 
-The first page is more like an menu, here the user will select from create an event, buy tickets for that event, see data about the events, and 
+The first page is more like an menu, here the user will select from create an event, buy tickets for that event, see data about the events, edit the events and see a list of all the events. 
+
 ![1](https://user-images.githubusercontent.com/73955757/155163510-5a5995cf-c4c9-401f-aaad-1c5ff04574c8.png)
 
 
-
+The page of 
 ![Desktop - 2](https://user-images.githubusercontent.com/73955757/155163541-b29a2b00-b54d-4489-a6f9-28930cc178ee.png)
 
 
