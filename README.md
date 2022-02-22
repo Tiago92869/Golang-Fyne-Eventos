@@ -9,8 +9,10 @@ The first page is more like an menu, here the user will select from create an ev
 ![1](https://user-images.githubusercontent.com/73955757/155163510-5a5995cf-c4c9-401f-aaad-1c5ff04574c8.png)
 
 
-The page of 
+This page let's the user create an event, here he will add all the information needed and the date of the event he is creating, at the side there is an list of all the events created.
+
 ![Desktop - 2](https://user-images.githubusercontent.com/73955757/155163541-b29a2b00-b54d-4489-a6f9-28930cc178ee.png)
+
 
 
 
