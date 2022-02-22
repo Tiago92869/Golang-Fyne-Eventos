@@ -1,9 +1,10 @@
 # Golang-Fyne-Eventos
 Goland and Fyne Event Program
 
+This project consist in an management software for an stadium, to manage the events that it hosts.
 
 
-
+The first page is more like an menu, here the user will select from create an event, buy tickets for that event, see data about the events, and 
 ![1](https://user-images.githubusercontent.com/73955757/155163510-5a5995cf-c4c9-401f-aaad-1c5ff04574c8.png)
 
 
